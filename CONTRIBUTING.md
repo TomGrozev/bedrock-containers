@@ -31,13 +31,18 @@ Every image MUST:
 4. **No capabilities** — the image must not require any Linux capability. Any
    deviation must be documented in the app README and flagged for review.
 5. **Read-only root filesystem** — design for `readOnlyRootFilesystem: true`:
-   - Pre-create and `chown` every writable directory in the Dockerfile.
-   - **Every writable path at runtime MUST be a mount** (emptyDir / tmpfs / PVC).
+   - **Consolidate all ephemeral writes into a single `/tmp` emptyDir mount** via
+     baked symlinks (recommended). Bake symlinks such as `/app/env -> /tmp/bedrock/env`
+     and `/app/node_modules/.prisma -> /tmp/bedrock/prisma-client`, and have the
+     entrypoint create `/tmp/bedrock/<subdir>` at startup. One bounded writable
+     region is a smaller attack surface than many scattered emptyDirs; the
+     trade-off is a single `sizeLimit` instead of per-path limits.
+   - **Persistent** paths (uploads, databases) still need their own mount (PVC).
+   - Read-only data baked into the image (e.g. schema files) does NOT need a mount
+     — but ensure it is world-readable (`chmod a+rX`) if the workload might run as
+     a different non-root uid than the image's `65532`.
    - Document the required writable mounts in `apps/<app>/README.md`.
    - Never write outside the declared writable paths.
-   - Read-only data that is baked into the image (e.g. schema files) does NOT need
-     a mount — but ensure it is world-readable (`chmod a+rX`) if the workload might
-     run as a different non-root uid than the image's `65532`.
 6. **tini as PID 1** — use `tini --` for signal forwarding / zombie reaping:
    `ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]`.
 7. **Scanned** — CI runs Grype and fails on HIGH/CRITICAL. If an unavoidable HIGH
@@ -75,10 +80,13 @@ Each app lives under `apps/<name>/`:
   tarball / package instead of an image, download it with `curl` + `tar`/`dpkg` in
   a build stage, then copy into the final Wolfi stage.
 - Install only the runtime deps the app needs; keep the list minimal.
-- Pre-create writable dirs and own them:
+- **Consolidate ephemeral writable dirs via symlinks** (recommended):
   ```dockerfile
-  RUN mkdir -p /tmp /var/run <app-dirs> \
-   && chown -R 65532:65532 /tmp /var/run <app-dirs>
+  RUN rm -rf /app/env /app/logs /app/node_modules/.prisma /var/spool/cron \
+      && ln -s /tmp/bedrock/env /app/env \
+      && ln -s /tmp/bedrock/logs /app/logs \
+      && ln -s /tmp/bedrock/prisma-client /app/node_modules/.prisma \
+      && ln -s /tmp/bedrock/cron /var/spool/cron
   ```
 - When you copy an **upstream startup script** that contains a root-dependent or
   broken block (e.g. setuid `crontab`, Alpine `dcron`), strip that block from the
@@ -89,6 +97,10 @@ Each app lives under `apps/<name>/`:
 ## entrypoint.sh conventions
 
 - `set -eu` (and `set -o pipefail` if using bash).
+- At startup, create the single writable region the symlinks resolve into:
+  ```sh
+  mkdir -p /tmp/bedrock/env /tmp/bedrock/logs /tmp/bedrock/prisma-client /tmp/bedrock/cron/crontabs
+  ```
 - Never rely on setuid binaries (e.g. `crontab`) or root-only syscalls. If upstream
   did so, replace the mechanism with a rootless equivalent — see `apps/sprout-track`
   for an example (`busybox crond` instead of Alpine `dcron`).

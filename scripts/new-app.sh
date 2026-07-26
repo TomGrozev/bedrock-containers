@@ -35,8 +35,8 @@ echo "Created apps/$APP from templates/app."
 echo
 echo "Next: edit the remaining placeholders (search for '<'):"
 echo "  <UPSTREAM_*>         upstream image / version / source"
-echo "  <APP_WRITABLE_DIRS>  writable directories (in the Dockerfile)"
 echo "  <APP_START_COMMAND>  CMD / exec target"
+echo "  Adjust the baked /tmp/bedrock symlinks in the Dockerfile to the paths your app writes."
 echo
 echo "Files:"
 ls -la "$DST"

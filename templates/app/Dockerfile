@@ -26,21 +26,25 @@ RUN apk add --no-cache \
 
 # Copy the application from the upstream image, owned by the runtime user.
 COPY --chown=65532:65532 --from=upstream /app /app
-# If upstream has a startup script, bring it too:
+# If upstream has a startup script, bring it too (and strip any root-dependent
+# cron/init block — see CONTRIBUTING.md):
 # COPY --from=upstream /usr/local/bin/docker-startup.sh /usr/local/bin/docker-startup.sh
 # RUN chmod 0755 /usr/local/bin/docker-startup.sh
 
-# Pre-create every directory that must be writable at runtime and own it.
-# Under readOnlyRootFilesystem these MUST be backed by writable mounts
-# (see apps/<APP>/README.md).
-RUN mkdir -p \
-      /tmp \
-      /var/run \
-      <APP_WRITABLE_DIRS> \
-    && chown -R 65532:65532 \
-      /tmp \
-      /var/run \
-      <APP_WRITABLE_DIRS>
+# Consolidate every ephemeral writable path into a SINGLE /tmp emptyDir mount.
+# Bake symlinks so each writable path resolves into /tmp/bedrock/<subdir>; the
+# entrypoint creates those subdirs at startup on the mounted /tmp. This gives
+# one bounded writable region instead of many scattered emptyDirs. Adjust the
+# symlink list to the paths YOUR app actually writes to.
+RUN rm -rf /app/env /app/logs /app/node_modules/.prisma /var/spool/cron \
+    && ln -s /tmp/bedrock/env /app/env \
+    && ln -s /tmp/bedrock/logs /app/logs \
+    && ln -s /tmp/bedrock/prisma-client /app/node_modules/.prisma \
+    && ln -s /tmp/bedrock/cron /var/spool/cron
+
+# Persistent / stateful writable dirs still need their own mounts (see README).
+RUN mkdir -p /app/Files /db \
+    && chown -R 65532:65532 /app/Files /db
 
 WORKDIR /app
 

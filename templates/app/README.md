@@ -18,13 +18,19 @@ Wolfi, non-root, replaces any root/setuid mechanism, etc.).
 | Root filesystem | read-only |
 | Init | `tini` (PID 1) |
 
-## Required writable mounts (read-only root fs)
+## Mounts (read-only root fs)
+
+All **ephemeral** writes are consolidated into a **single `/tmp` emptyDir mount**
+via baked symlinks (`/app/env`, `/app/logs`, `/app/node_modules/.prisma`, and the
+cron spool resolve into `/tmp/bedrock/*`, created by the entrypoint at startup).
+This is one bounded writable region (smaller attack surface) at the cost of a single
+`sizeLimit` instead of per-path limits. **Persistent** paths need their own mount.
 
 | Path | Type | Purpose |
 |---|---|---|
-| `/tmp` | emptyDir | general temp |
-| `/var/run` | emptyDir | runtime pid / sockets |
-| TODO | TODO | TODO |
+| `/tmp` | emptyDir (single writable region) | all ephemeral writes |
+| `/app/Files` | PVC | persistent uploads (if the app has any) |
+| TODO | TODO | TODO persistent/path-specific mount |
 
 ## Environment
 
@@ -62,11 +68,9 @@ controllers:
 persistence:
   tmp:
     type: emptyDir
+    sizeLimit: 1Gi
     advancedMounts: {app: {app: [{path: /tmp}]}}
-  var-run:
-    type: emptyDir
-    advancedMounts: {app: {app: [{path: /var/run}]}}
-  # TODO: add the app-specific writable mounts from the table above.
+  # TODO: add persistent / path-specific mounts from the table above.
 ```
 
 ## Local build

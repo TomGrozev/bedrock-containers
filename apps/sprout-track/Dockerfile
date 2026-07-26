@@ -55,21 +55,20 @@ RUN chmod 0755 /usr/local/bin/docker-startup.sh \
 # Make it world-readable so the image runs under any non-root uid, not just 65532.
 RUN chmod -R a+rX /app/prisma
 
-# Pre-create every directory that must be writable at runtime and own it by the
-# runtime user. Under a read-only root filesystem these paths MUST be backed by
-# writable mounts (emptyDir/tmpfs/PVC) — see apps/sprout-track/README.md.
-# /app/prisma is intentionally NOT here (read-only, baked). /var/run is unused.
-RUN mkdir -p \
-      /app/env \
-      /app/Files \
-      /app/logs \
-      /app/node_modules/.prisma \
-      /tmp \
-      /var/spool/cron/crontabs \
-      /db \
-    && chown -R 65532:65532 \
-      /app/env /app/Files /app/logs /app/node_modules/.prisma \
-      /tmp /var/spool/cron /db
+# Consolidate every ephemeral writable path into a SINGLE /tmp emptyDir mount.
+# Bake symlinks so /app/env, /app/logs, /app/node_modules/.prisma and the cron
+# spool all resolve into /tmp/bedrock/<subdir>. The entrypoint creates those
+# subdirs at startup (on the mounted /tmp). This is the recommended hardened
+# pattern: one bounded writable region instead of several scattered emptyDirs.
+RUN rm -rf /app/env /app/logs /app/node_modules/.prisma /var/spool/cron \
+    && ln -s /tmp/bedrock/env /app/env \
+    && ln -s /tmp/bedrock/logs /app/logs \
+    && ln -s /tmp/bedrock/prisma-client /app/node_modules/.prisma \
+    && ln -s /tmp/bedrock/cron /var/spool/cron
+
+# Persistent / stateful writable dirs still need their own mounts.
+RUN mkdir -p /app/Files /db \
+    && chown -R 65532:65532 /app/Files /db
 
 WORKDIR /app
 
