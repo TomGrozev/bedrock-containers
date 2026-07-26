@@ -8,7 +8,7 @@ Every image is **Wolfi-based**, **rootless** (`65532:65532`), **read-only-root-f
 
 | Image | Upstream | Notes |
 |---|---|---|
-| [`ghcr.io/tomgrozev/sprout-track`](apps/sprout-track/README.md) | [`sprouttrack/sprout-track`](https://github.com/Oak-and-Sprout/sprout-track) (Node 22 / Next.js / Prisma) | Replaces upstream setuid/`dcron` notification cron with a rootless `busybox crond`. |
+| [`ghcr.io/tomgrozev/bedrock-containers/sprout-track`](apps/sprout-track/README.md) | [`sprouttrack/sprout-track`](https://github.com/Oak-and-Sprout/sprout-track) (Node 22 / Next.js / Prisma) | Replaces upstream setuid/`dcron` notification cron with a rootless `busybox crond`. |
 
 Each app has its own README with the security posture, required writable mounts, environment variables, and a deployment example.
 
@@ -17,14 +17,14 @@ Each app has its own README with the security posture, required writable mounts,
 Pull from GHCR:
 
 ```sh
-docker pull ghcr.io/tomgrozev/sprout-track:latest
+docker pull ghcr.io/tomgrozev/bedrock-containers/sprout-track:latest
 ```
 
 Reference it in a Kubernetes manifest:
 
 ```yaml
 image:
-  repository: ghcr.io/tomgrozev/sprout-track
+  repository: ghcr.io/tomgrozev/bedrock-containers/sprout-track
   tag: latest          # pin by digest in production
 ```
 
@@ -46,7 +46,7 @@ spec:
       type: RuntimeDefault
   containers:
     - name: app
-      image: ghcr.io/tomgrozev/sprout-track:latest
+      image: ghcr.io/tomgrozev/bedrock-containers/sprout-track:latest
       securityContext:        # container-level
         readOnlyRootFilesystem: true
         allowPrivilegeEscalation: false
@@ -113,7 +113,7 @@ On every push to `main` (and on pull requests, without pushing), CI:
 1. Discovers every `apps/*` directory.
 2. Builds a multi-arch (`linux/amd64`, `linux/arm64`) image with Buildx.
 3. Runs Hadolint and **Grype** (fails on HIGH/CRITICAL).
-4. Pushes to **GHCR** (`ghcr.io/tomgrozev/<app>`, tagged `latest` + date) and makes the package public.
+4. Pushes to **GHCR** (`ghcr.io/tomgrozev/bedrock-containers/<app>`, tagged `latest` + date) and makes the package public.
 
 Renovate opens PRs to bump the Wolfi base image (`cgr.dev/chainguard/wolfi-base`) and each app's upstream version (tracked via a `# renovate:` annotation on `ARG VERSION` in the Dockerfile).
 

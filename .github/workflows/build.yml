@@ -55,7 +55,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}
+          images: ghcr.io/${{ github.repository }}/${{ matrix.app }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=date,pattern='YYYYMMDD'
@@ -80,13 +80,15 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: anchore/scan-action@v2
         with:
-          image: ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:latest
+          image: ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
           severity-cutoff: high
           fail-build: true
 
       - name: Make package public
         if: github.event_name != 'pull_request'
-        run: |
-          gh api -X PUT "/user/packages/container/${{ matrix.app }}/visibility" -f visibility=public
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          repo_name="${GITHUB_REPOSITORY##*/}"
+          pkg_url="${repo_name}%2F${{ matrix.app }}"
+          gh api -X PUT "/repos/${GITHUB_REPOSITORY}/packages/container/${pkg_url}/visibility" -f visibility=public

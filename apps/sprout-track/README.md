@@ -92,7 +92,7 @@ controllers:
     containers:
       app:
         image:
-          repository: ghcr.io/tomgrozev/sprout-track
+          repository: ghcr.io/tomgrozev/bedrock-containers/sprout-track
           tag: latest        # pin by digest in production
         securityContext:
           readOnlyRootFilesystem: true

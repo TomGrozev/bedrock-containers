@@ -98,13 +98,13 @@ Each app lives under `apps/<name>/`:
 
 ## CI
 
-`.github/workflows/build.yml` on push to `main` (and on PRs, without pushing):
+`.github/workflows/build.yml` on push to `main` (and on pull requests, without pushing):
 
 1. Discovers every `apps/*/` directory.
 2. Builds multi-arch (`linux/amd64`, `linux/arm64`) with Buildx.
 3. Runs Hadolint and Grype (fail on HIGH/CRITICAL).
-4. Pushes to `ghcr.io/tomgrozev/<app>` (tagged `latest` + date) and makes the
-   package public.
+4. Pushes to `ghcr.io/tomgrozev/bedrock-containers/<app>` (tagged `latest` + date)
+   and makes the package public.
 
 The template lives under `templates/app/` (outside `apps/`) so CI does not try to
 build it. New app dirs are picked up automatically — no CI edits required.
