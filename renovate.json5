@@ -1,0 +1,22 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+  labels: ["dependencies"],
+  packageRules: [
+    {
+      description: "Group Wolfi base image updates",
+      matchPackageNames: ["cgr.dev/chainguard/wolfi-base"],
+      groupName: "wolfi-base"
+    }
+  ],
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: ["/apps/[^/]+/Dockerfile$/"],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?ARG VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      versioningTemplate: "docker"
+    }
+  ]
+}
