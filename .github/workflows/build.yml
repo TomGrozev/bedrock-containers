@@ -2,14 +2,14 @@ name: build
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
-      - 'apps/**'
-      - '.github/workflows/build.yml'
+      - "apps/**"
+      - ".github/workflows/build.yml"
   pull_request:
     paths:
-      - 'apps/**'
-      - '.github/workflows/build.yml'
+      - "apps/**"
+      - ".github/workflows/build.yml"
   workflow_dispatch:
 
 permissions:
