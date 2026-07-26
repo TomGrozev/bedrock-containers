@@ -22,11 +22,22 @@ bedrock-containers/
 │       ├── entrypoint.sh       # optional runtime entrypoint
 │       ├── .dockerignore
 │       └── README.md           # app-specific hardening, mounts, env, deploy snippet
+├── templates/app/              # copy-ready scaffold for new apps
+├── scripts/new-app.sh         # scaffold a new app from the template
 ├── .github/workflows/build.yml # build + scan + push to GHCR
+├── CONTRIBUTING.md             # hardening rules + authoring guide
 └── renovate.json5
 ```
 
-Adding a new app is as simple as dropping a directory under `apps/`.
+## Adding a new app
+
+```sh
+scripts/new-app.sh <app-name>
+```
+
+This scaffolds `apps/<app-name>/` from `templates/app/`. Then fill in the
+placeholders and commit — CI picks it up automatically. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the full hardening standard and conventions.
 
 ## How it works
 
