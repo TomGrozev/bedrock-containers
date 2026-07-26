@@ -35,6 +35,9 @@ Every image MUST:
    - **Every writable path at runtime MUST be a mount** (emptyDir / tmpfs / PVC).
    - Document the required writable mounts in `apps/<app>/README.md`.
    - Never write outside the declared writable paths.
+   - Read-only data that is baked into the image (e.g. schema files) does NOT need
+     a mount — but ensure it is world-readable (`chmod a+rX`) if the workload might
+     run as a different non-root uid than the image's `65532`.
 6. **tini as PID 1** — use `tini --` for signal forwarding / zombie reaping:
    `ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]`.
 7. **Scanned** — CI runs Grype and fails on HIGH/CRITICAL. If an unavoidable HIGH
@@ -77,6 +80,11 @@ Each app lives under `apps/<name>/`:
   RUN mkdir -p /tmp /var/run <app-dirs> \
    && chown -R 65532:65532 /tmp /var/run <app-dirs>
   ```
+- When you copy an **upstream startup script** that contains a root-dependent or
+  broken block (e.g. setuid `crontab`, Alpine `dcron`), strip that block from the
+  copy with `sed` **and** add a build-time guard that fails the build if the block
+  remains (so an upstream reformat is caught, not silently re-introduced). See
+  `apps/sprout-track` for the pattern.
 
 ## entrypoint.sh conventions
 
@@ -84,6 +92,8 @@ Each app lives under `apps/<name>/`:
 - Never rely on setuid binaries (e.g. `crontab`) or root-only syscalls. If upstream
   did so, replace the mechanism with a rootless equivalent — see `apps/sprout-track`
   for an example (`busybox crond` instead of Alpine `dcron`).
+- If you strip an upstream cron/init block, your entrypoint owns that mechanism
+  entirely — make it the only one in the image.
 - Degrade gracefully: if a required writable path is missing under a read-only root
   fs, warn on stderr and continue rather than crash.
 - Finish with `exec "$@"` (or `exec <upstream-startup> "$@"` when preserving an

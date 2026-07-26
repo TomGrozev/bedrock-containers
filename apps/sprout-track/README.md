@@ -12,8 +12,11 @@ This image preserves that startup flow but:
 
 - re-layers the application onto a minimal Wolfi base,
 - runs as a non-root user (`65532:65532`),
-- replaces the upstream's broken **setuid `crontab` + Alpine `dcron`** notification
-  cron with a **rootless `busybox crond`** that runs as the runtime user.
+- **completely replaces** the upstream's **setuid `crontab` + Alpine `dcron`**
+  notification cron with a **rootless `busybox crond`** that runs as the runtime
+  user. The upstream cron block is stripped from the copied `docker-startup.sh`
+  (with a build-time guard that fails the build if the block remains), so the
+  entrypoint's cron is the only one in the image.
 
 The in-pod cron is active only when `ENABLE_NOTIFICATIONS=true`. When enabled, the
 entrypoint writes a crontab (for the runtime user) that POSTs to the app's
@@ -21,6 +24,12 @@ entrypoint writes a crontab (for the runtime user) that POSTs to the app's
 background before handing off to the upstream startup script. The
 `/api/notifications/cron` endpoint is itself gated by a DB flag, so firing while
 notifications are disabled at the app level is a harmless no-op.
+
+> **Choosing a cron mode.** This image gives you two options:
+> - **In-pod cron (the replacement):** set `ENABLE_NOTIFICATIONS=true` and mount
+>   `/var/spool/cron` (emptyDir/tmpfs). Drop the external K8s CronJob.
+> - **External cron:** keep `ENABLE_NOTIFICATIONS=false` (no `/var/spool/cron`
+>   mount) and drive `/api/notifications/cron` from a K8s CronJob.
 
 ## Security posture
 
@@ -36,18 +45,18 @@ Designed for the Kubernetes `restricted` Pod Security Standard:
 
 ## Required writable mounts (read-only root fs)
 
-The app must write to several paths; under `readOnlyRootFilesystem: true` each of
-these **must** be a writable mount. SQLite-only paths are optional when using
+Under `readOnlyRootFilesystem: true` each of these **must** be a writable mount.
+The Prisma schema (`/app/prisma`) is **baked into the image and read-only** — it
+does NOT need a mount, and the `copy-prisma-schemas` init container is NOT needed
+with this image. `/var/run` is unused. SQLite-only paths are optional when using
 `DATABASE_PROVIDER=postgresql`.
 
 | Path | Type | Purpose |
 |---|---|---|
-| `/tmp` | emptyDir | general temp |
-| `/var/run` | emptyDir | runtime pid / sockets |
+| `/tmp` | emptyDir | general temp (image processing, etc.) |
 | `/app/env` | emptyDir | persisted env file (bootstrapped by the startup script) |
 | `/app/Files` | PVC | uploaded files (persistent) |
-| `/app/logs` | emptyDir | application log files |
-| `/app/prisma` | emptyDir | Prisma schema files (populate via an init container) |
+| `/app/logs` | emptyDir | notification / app log files |
 | `/app/node_modules/.prisma` | emptyDir | generated Prisma client |
 | `/var/spool/cron` | emptyDir / tmpfs | crontab spool — **only when `ENABLE_NOTIFICATIONS=true`** |
 | `/db` | PVC / emptyDir | SQLite databases — **only when `DATABASE_PROVIDER=sqlite`** |
@@ -67,14 +76,14 @@ production, override at least:
 | `DATABASE_URL` | `file:/db/baby-tracker.db` | postgres URI when using postgresql |
 | `LOG_DATABASE_URL` | `file:/db/baby-tracker-logs.db` | postgres URI for logs |
 | `APP_URL` | — | public URL |
-| `ENABLE_NOTIFICATIONS` | `false` | set `true` to enable the in-pod cron |
+| `ENABLE_NOTIFICATIONS` | `false` | set `true` to enable the in-pod cron (requires `/var/spool/cron` mount) |
 | `NOTIFICATION_CRON_SECRET` | — | required when notifications are enabled |
 | `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | — | web-push keys |
 | `COOKIE_SECURE` | — | set `true` behind TLS |
 | `PORT` | `3000` | |
 | `NODE_ENV` | `production` | |
 
-## Example deployment (restricted Pod Security)
+## Example deployment (restricted Pod Security, in-pod cron)
 
 ```yaml
 controllers:
@@ -102,7 +111,9 @@ controllers:
             drop: ["ALL"]
         env:
           - {name: DATABASE_PROVIDER, value: postgresql}
-          # DATABASE_URL, LOG_DATABASE_URL, APP_URL, ENABLE_NOTIFICATIONS, etc.
+          - {name: ENABLE_NOTIFICATIONS, value: "true"}
+          # DATABASE_URL, LOG_DATABASE_URL, APP_URL, NOTIFICATION_CRON_SECRET,
+          # VAPID_* etc.
 
 persistence:
   env:
@@ -115,22 +126,18 @@ persistence:
   logs:
     type: emptyDir
     advancedMounts: {app: {app: [{path: /app/logs}]}}
-  prisma:
-    type: emptyDir
-    advancedMounts: {app: {app: [{path: /app/prisma}]}}
   prisma-client:
     type: emptyDir
     advancedMounts: {app: {app: [{path: /app/node_modules/.prisma}]}}
   tmp:
     type: emptyDir
     advancedMounts: {app: {app: [{path: /tmp}]}}
-  var-run:
-    type: emptyDir
-    advancedMounts: {app: {app: [{path: /var/run}]}}
   cron-spool:
     type: emptyDir
     advancedMounts: {app: {app: [{path: /var/spool/cron}]}}
 ```
+
+No init container is required — the Prisma schema is baked into the image.
 
 ## Local build
 

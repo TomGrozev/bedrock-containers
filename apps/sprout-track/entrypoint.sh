@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 set -eu
 
-# Rootless notification cron.
-# Replaces the upstream image's setuid `crontab` + Alpine `dcron` setup, which
-# cannot run as a non-root user. We write a crontab for the runtime user and
-# launch busybox `crond` (which runs fine unprivileged) in the background.
+# Rootless notification cron — the COMPLETE replacement for the upstream image's
+# setuid `crontab` + Alpine `dcron` setup (which cannot run as a non-root user).
+# The upstream cron block has been stripped from docker-startup.sh; this is the
+# only cron in the image.
 #
 # Active only when ENABLE_NOTIFICATIONS=true. The app's /api/notifications/cron
 # endpoint is itself gated by a DB flag, so firing when notifications are

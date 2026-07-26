@@ -39,28 +39,37 @@ RUN apk add --no-cache \
 # Bring the application (includes node_modules w/ Prisma engines + better-sqlite3).
 # --chown so every file is owned by the runtime user — no root required at runtime.
 COPY --chown=65532:65532 --from=upstream /app /app
-# Bring upstream's startup script (Prisma generate/migrate/seed, then execs CMD).
+
+# Bring upstream's startup script and STRIP its cron block. Upstream's cron uses
+# setuid `crontab` + Alpine `dcron`, which cannot run as a non-root user; this
+# image replaces it entirely with a rootless busybox crond in entrypoint.sh
+# (the only cron in the image). The guard fails the build if the strip did not
+# take (e.g. upstream reformatted the block).
 COPY --from=upstream /usr/local/bin/docker-startup.sh /usr/local/bin/docker-startup.sh
-RUN chmod 0755 /usr/local/bin/docker-startup.sh
+RUN chmod 0755 /usr/local/bin/docker-startup.sh \
+ && sed -i '/^# Notification setup (only if enabled)/,/^fi$/d' /usr/local/bin/docker-startup.sh \
+ && ! grep -qE 'crond|notification:cron:setup' /usr/local/bin/docker-startup.sh
+
+# The Prisma schema under /app/prisma is read at runtime (migrations/schema) and
+# is baked into this image, so it does NOT need a mount or an init container.
+# Make it world-readable so the image runs under any non-root uid, not just 65532.
+RUN chmod -R a+rX /app/prisma
 
 # Pre-create every directory that must be writable at runtime and own it by the
 # runtime user. Under a read-only root filesystem these paths MUST be backed by
-# writable mounts (emptyDir/tmpfs/PVC) — see apps/sprout-track/README.md. Pre-
-# creating them (a) lets the image run standalone without an explicit mount plan,
-# and (b) makes the required mount set explicit in the image.
+# writable mounts (emptyDir/tmpfs/PVC) — see apps/sprout-track/README.md.
+# /app/prisma is intentionally NOT here (read-only, baked). /var/run is unused.
 RUN mkdir -p \
       /app/env \
       /app/Files \
       /app/logs \
-      /app/prisma \
       /app/node_modules/.prisma \
       /tmp \
-      /var/run \
       /var/spool/cron/crontabs \
       /db \
     && chown -R 65532:65532 \
-      /app/env /app/Files /app/logs /app/prisma /app/node_modules/.prisma \
-      /tmp /var/run /var/spool/cron /db
+      /app/env /app/Files /app/logs /app/node_modules/.prisma \
+      /tmp /var/spool/cron /db
 
 WORKDIR /app
 
