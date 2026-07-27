@@ -51,11 +51,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Compute image name
+        id: image
+        run: |
+          # Container image references must be lowercase; normalize the repo path.
+          echo "base=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.app }}" >> "$GITHUB_OUTPUT"
+
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/${{ matrix.app }}
+          images: ${{ steps.image.outputs.base }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=schedule,pattern={{date 'YYYYMMDD'}},enable=true
@@ -81,7 +87,7 @@ jobs:
         uses: anchore/scan-action@v7
         with:
           grype-version: "v0.114.0"
-          image: ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
+          image: ${{ steps.image.outputs.base }}:latest
           severity-cutoff: high
           fail-build: true
 
