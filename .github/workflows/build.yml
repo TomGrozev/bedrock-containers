@@ -80,7 +80,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: anchore/scan-action@v7
         with:
-          grype-version: "0.114.0"
+          grype-version: "v0.114.0"
           image: ghcr.io/${{ github.repository }}/${{ matrix.app }}:latest
           severity-cutoff: high
           fail-build: true
