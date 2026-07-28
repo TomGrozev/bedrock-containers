@@ -13,10 +13,11 @@ This image preserves that startup flow but:
 - re-layers the application onto a minimal Wolfi base,
 - runs as a non-root user (`65532:65532`),
 - **completely replaces** the upstream's **setuid `crontab` + Alpine `dcron`**
-  notification cron with a **rootless `busybox crond`** that runs as the runtime
-  user. The upstream cron block is stripped from the copied `docker-startup.sh`
-  (with a build-time guard that fails the build if the block remains), so the
-  entrypoint's cron is the only one in the image.
+  notification cron with a **rootless background-loop** notification ping (a `curl`
+  loop in `entrypoint.sh`, no `crond` daemon required). The upstream cron block is
+  stripped from the copied `docker-startup.sh` (with a build-time guard that fails
+  the build if the block remains), so the entrypoint's loop is the only notification
+  trigger in the image.
 
 The in-pod cron is active only when `ENABLE_NOTIFICATIONS=true`. When enabled, the
 entrypoint writes a crontab (for the runtime user) that POSTs to the app's
@@ -26,9 +27,10 @@ background before handing off to the upstream startup script. The
 notifications are disabled at the app level is a harmless no-op.
 
 > **Choosing a cron mode.** This image gives you two options:
-> - **In-pod cron (the replacement):** set `ENABLE_NOTIFICATIONS=true` (the
->   `/var/spool/cron` spool is already folded into the `/tmp` mount). Drop the
->   external K8s CronJob.
+> - **In-pod ping (the replacement):** set `ENABLE_NOTIFICATIONS=true` and the
+>   entrypoint runs a rootless `curl` loop that POSTs to `/api/notifications/cron`
+>   every 60s (the `/var/spool/cron` spool is no longer used). Drop the external
+>   K8s CronJob.
 > - **External cron:** keep `ENABLE_NOTIFICATIONS=false` (no cron needed) and
 >   drive `/api/notifications/cron` from a K8s CronJob.
 

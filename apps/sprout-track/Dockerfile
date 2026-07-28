@@ -23,32 +23,58 @@ LABEL org.opencontainers.image.documentation="https://github.com/TomGrozev/bedro
 
 # Runtime deps (all glibc, matching upstream):
 #   nodejs-22         - Node runtime (upstream ships Node 22.23.1)
-#   busybox           - provides crond for the rootless notification cron
-#   curl              - used by the notification cron to ping the app
+#   npm               - Node package manager. Wolfi's nodejs-22 does NOT bundle npm
+#                       (unlike Alpine's), so it must be installed explicitly; required
+#                       for `npm start` and the upstream startup script's
+#                       `npm run env:ensure` / `prisma:generate`.
+#   busybox           - misc core utilities
+#   curl              - used by the notification ping loop to call the app
 #   postgresql-client - provides pg_isready used by the upstream startup script
 #   ca-certificates   - TLS trust
 #   tini              - PID 1 init / signal forwarding
+#   tzdata            - timezone database; the upstream /etc/TZ write is stripped, so
+#                       TZ is honoured via the TZ env var + zoneinfo from this package.
 RUN apk add --no-cache \
     nodejs-22 \
+    npm \
     busybox \
     curl \
     postgresql-client \
     ca-certificates \
-    tini
+    tini \
+    tzdata
 
 # Bring the application (includes node_modules w/ Prisma engines + better-sqlite3).
 # --chown so every file is owned by the runtime user — no root required at runtime.
 COPY --chown=65532:65532 --from=upstream /app /app
 
-# Bring upstream's startup script and STRIP its cron block. Upstream's cron uses
-# setuid `crontab` + Alpine `dcron`, which cannot run as a non-root user; this
-# image replaces it entirely with a rootless busybox crond in entrypoint.sh
-# (the only cron in the image). The guard fails the build if the strip did not
-# take (e.g. upstream reformatted the block).
+# Bring upstream's startup script and STRIP two blocks that are incompatible with a
+# read-only root fs / non-root user:
+#   1. The timezone block (`echo "$TZ" > /etc/TZ` + a /etc/localtime symlink) — /etc
+#      is not writable at runtime, and TZ is honoured via the TZ env var + tzdata.
+#   2. The notification cron block (setuid `crontab` + Alpine `dcron`, and a
+#      busybox-style `crond -f -d 8`) — replaced entirely by a rootless, read-only-safe
+#      background loop in entrypoint.sh (the only notification trigger in the image).
+# The strip uses an awk pass that deletes each block from its marker line to the
+# matching `fi` (tracking then/fi depth), so it is robust to upstream reformatting
+# within those blocks. The guard fails the build if `crond` or `notification:cron:setup`
+# survives the strip (e.g. upstream renamed the markers).
 COPY --from=upstream /usr/local/bin/docker-startup.sh /usr/local/bin/docker-startup.sh
-RUN chmod 0755 /usr/local/bin/docker-startup.sh \
- && sed -i '/^# Notification setup (only if enabled)/,/^fi$/d' /usr/local/bin/docker-startup.sh \
- && ! grep -qE 'crond|notification:cron:setup' /usr/local/bin/docker-startup.sh
+RUN <<'STRIP'
+awk '
+  /# Set up timezone for Alpine Linux/ || /if \[ "\$ENABLE_NOTIFICATIONS" = "true" \]; then/ { skip=1; if (/then[[:space:]]*$/) depth=1; else depth=0; next }
+  skip && /then[[:space:]]*$/ { depth++; next }
+  skip && /^[[:space:]]*fi[[:space:]]*$/ { if (--depth <= 0) skip=0; next }
+  skip { next }
+  { print }
+' /usr/local/bin/docker-startup.sh > /usr/local/bin/docker-startup.sh.new
+mv /usr/local/bin/docker-startup.sh.new /usr/local/bin/docker-startup.sh
+chmod 0755 /usr/local/bin/docker-startup.sh
+if grep -qE 'crond|notification:cron:setup' /usr/local/bin/docker-startup.sh; then
+  echo "STRIP FAILED: crond or notification:cron:setup survived the awk pass" >&2
+  exit 1
+fi
+STRIP
 
 # The Prisma schema under /app/prisma is read at runtime (migrations/schema) and
 # is baked into this image, so it does NOT need a mount or an init container.
