@@ -20,6 +20,7 @@ ENV NODE_ENV=production \
     DATABASE_URL=file:/db/baby-tracker.db \
     LOG_DATABASE_URL=file:/db/baby-tracker-logs.db \
     ENABLE_NOTIFICATIONS=false
+LABEL org.opencontainers.image.documentation="https://github.com/TomGrozev/bedrock-containers/blob/master/apps/sprout-track/SECURITY.md"
 
 # Runtime deps (all glibc, matching upstream):
 #   nodejs-22         - Node runtime (upstream ships Node 22.23.1)

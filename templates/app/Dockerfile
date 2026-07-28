@@ -16,6 +16,8 @@ ARG VERSION=<UPSTREAM_VERSION>
 ENV NODE_ENV=production \
     PORT=3000
 
+LABEL org.opencontainers.image.documentation="https://github.com/tomgrozev/bedrock-containers/blob/master/apps/<app>/SECURITY.md"
+
 # Runtime deps from Wolfi (glibc). Keep this list minimal.
 RUN apk add --no-cache \
     ca-certificates \

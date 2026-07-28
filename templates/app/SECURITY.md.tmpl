@@ -1,0 +1,44 @@
+# Security — Known Vulnerabilities in `<app>`
+
+This image is a hardened, rootless re-layer of the upstream
+[`<UPSTREAM_IMAGE>`](<UPSTREAM_SOURCE_URL>) application onto Chainguard's Wolfi
+base. It is scanned on every push with
+[Grype](https://github.com/anchore/grype) (severity cutoff `high`).
+
+## TL;DR
+All `High`/`Critical` findings reported by Grype should be reviewed. When a
+finding is inherited from the upstream application layer (copied verbatim from
+the upstream image) and cannot be patched in this repo without forking/rebuilding
+the app, it may be intentionally **accepted** and listed in `.grype.yaml`. The
+Wolfi base itself is generally clean at `High`/`Critical`.
+
+## Why a finding might be accepted
+- It is inherited from the upstream application layer; this repo only re-layers
+  and hardens the *runtime* (rootless, read-only rootfs, dropped capabilities),
+  not the app code.
+- A fix exists upstream but applying it here means forking/rebuilding the app —
+  out of scope and potentially destabilizing.
+- The app runs as a non-root user (UID 65532) under a read-only root filesystem
+  with all capabilities dropped, which reduces exploitability.
+
+## Accepted findings (High)
+> This section is **auto-generated** from [`.grype.yaml`](./.grype.yaml) by
+> `scripts/gen-security-md.py`. To change what is accepted, edit `.grype.yaml`
+> (the single source of truth); CI keeps this file in sync. Do not edit the list
+> below by hand.
+
+{{ACCEPTED}}
+
+## How this is enforced
+- A curated, app-scoped `.grype.yaml` ignore list (see above) suppresses
+  specific vulnerability IDs during scanning, each with a `reason`. This keeps
+  the build green for the accepted set while still **failing the build on any
+  NEW `high`/`critical` finding** (e.g. in the Wolfi base or a newly
+  introduced dependency).
+- Grype prints suppressed findings (with the reason) in the CI scan log, and a
+  pull-request comment summarizes the scan.
+
+## Re-evaluating
+When the upstream ships a release with patched dependencies (or when you choose
+to rebuild the app's dependencies in the Dockerfile), remove those entries from
+`.grype.yaml` and re-scan.

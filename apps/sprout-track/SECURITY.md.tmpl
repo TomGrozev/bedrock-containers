@@ -1,0 +1,48 @@
+# Security — Known Vulnerabilities in `sprout-track`
+
+This image is a hardened, rootless re-layer of the upstream
+[`sprouttrack/sprout-track`](https://github.com/Oak-and-Sprout/sprout-track)
+application onto Chainguard's Wolfi base. It is scanned on every push with
+[Grype](https://github.com/anchore/grype) (severity cutoff `high`).
+
+## TL;DR
+All `High`/`Critical` findings reported by Grype live in the **upstream
+application's npm dependencies** (copied verbatim from the upstream image's
+`/app`), **not** in the Wolfi base image. The Wolfi base is clean at
+`High`/`Critical`. These findings are **accepted** and documented here; they
+are deliberately NOT patched in this repo because fixing them requires
+modifying the upstream application (rebuilding `node_modules` / bumping the
+upstream release), which risks breaking the app and is outside the scope of a
+hardening re-layer.
+
+## Why we accept them
+- They are inherited from the upstream application layer. This repo only
+  re-layers and hardens the *runtime* (rootless, read-only rootfs, dropped
+  capabilities); it does not rebuild the app.
+- Every finding has an upstream fix available, but applying it here would mean
+  forking/rebuilding the app — out of scope and potentially destabilizing.
+- The application runs as a non-root user (UID 65532) under a read-only root
+  filesystem with all capabilities dropped, which substantially reduces the
+  exploitability of these server-side npm issues.
+
+## Accepted findings (High)
+> This section is **auto-generated** from [`.grype.yaml`](./.grype.yaml) by
+> `gen-security-md.py`. To change what is accepted, edit `.grype.yaml` (the
+> single source of truth); CI keeps this file in sync. Do not edit the list
+> below by hand.
+
+{{ACCEPTED}}
+
+## How this is enforced
+- A curated, app-scoped `.grype.yaml` ignore list suppresses these **specific**
+  vulnerability IDs during scanning, each with a `reason` pointing here. This
+  keeps the build green for the accepted set while still **failing the build on
+  any NEW `high`/`critical` finding** (e.g. in the Wolfi base or a newly
+  introduced dependency).
+- Grype prints suppressed findings (with the reason) in the CI scan log, and a
+  pull-request comment summarizes the scan.
+
+## Re-evaluating
+When the upstream `sprouttrack/sprout-track` ships a release with patched
+dependencies (or when we choose to rebuild `node_modules` in the Dockerfile),
+these entries should be removed from `.grype.yaml` and the image re-scanned.

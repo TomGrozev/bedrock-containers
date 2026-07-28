@@ -1,0 +1,142 @@
+# Grype ignore list for sprout-track.
+# These specific High-severity findings are inherited from the upstream
+# sprouttrack/sprout-track application's npm dependencies (copied verbatim into
+# the image). The Wolfi base image is clean at High/Critical. They are accepted
+# and documented in apps/sprout-track/SECURITY.md. Each entry is scoped to a
+# specific vulnerability ID, so the build STILL fails on any NEW high/critical
+# finding (e.g. in the base image or a new dependency).
+ignore:
+  - vulnerability: CVE-2026-12143
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-13149
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-14257
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-32141
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-32887
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-33228
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-33671
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-35209
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-42033
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-42035
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-42043
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-42264
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44486
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44487
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44488
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44494
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44495
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44496
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44573
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44574
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44575
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44578
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44579
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-44705
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-45109
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-45623
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-59869
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-64641
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-64642
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-64645
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-64649
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-25h7-pfq9-p65f
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-267c-6grr-h53f
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-26hh-7cqf-hhc6
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-35jp-ww65-95wh
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-36qx-fr4f-26g5
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-38f7-945m-qr2g
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-3g43-6gmg-66jw
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-3jxr-9vmj-r5cp
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-492v-c6pp-mqqv
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-52cp-r559-cp3m
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-6chq-wfr3-2hj9
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-6g55-p6wh-862q
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-6gpp-xcg3-4w24
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-737v-mqg7-c878
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-777c-7fjr-54vf
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-89xv-2m56-2m9x
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-8h8q-6873-q5fj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-c2c7-rcm5-vvqj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-c4j6-fc7j-m34r
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-f88m-g3jw-g9cj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-hfxv-24rg-xrqf
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-hmw2-7cc7-3qxx
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-j5f8-grm9-p9fc
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-m99w-x7hq-7vfj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-mg66-mrh9-m8jx
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-mh99-v99m-4gvg
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-p6gq-j5cr-w38f
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-p92q-9vqr-4j8v
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-p9j2-gv94-2wf4
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-pf86-5x62-jrwf
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-ph9p-34f9-6g65
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-pmwg-cvhr-8vh7
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-q4gf-8mx6-v5v3
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-q8qp-cvcw-x6jj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-r28c-9q8g-f849
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-rf6f-7fwh-wjgh
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"

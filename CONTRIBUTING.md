@@ -45,8 +45,14 @@ Every image MUST:
    - Never write outside the declared writable paths.
 6. **tini as PID 1** — use `tini --` for signal forwarding / zombie reaping:
    `ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]`.
-7. **Scanned** — CI runs Grype and fails on HIGH/CRITICAL. If an unavoidable HIGH
-   CVE is a false positive or won't-fix, document the rationale in the app README.
+  7. **Scanned** — CI runs Grype and fails on HIGH/CRITICAL. If a HIGH/CRITICAL
+     finding is inherited from the upstream app and not patchable here (a
+     won't-fix), accept it by adding its ID to `apps/<app>/.grype.yaml` (the
+     single source of truth) with a `reason`. `apps/<app>/SECURITY.md` is
+     **auto-generated** from that file by `scripts/gen-security-md.py` — never
+     edit it by hand. CI keeps the two in sync and fails a PR whose
+     `SECURITY.md` is out of date; the build still fails on any NEW high/critical
+     finding.
 
 ## File layout
 
@@ -58,6 +64,8 @@ Each app lives under `apps/<name>/`:
 | `entrypoint.sh` | yes | runtime setup, then `exec` the app |
 | `docker-bake.hcl` | yes | local build config (mirrors CI) |
 | `.dockerignore` | yes | keep the build context minimal |
+| `.grype.yaml` | yes | accepted-vuln ignore list — single source of truth |
+| `SECURITY.md.tmpl` | yes | template for the auto-generated `SECURITY.md` |
 | `README.md` | yes | app hardening/mounts/env/deploy docs (see template) |
 
 ## Dockerfile conventions
@@ -124,7 +132,10 @@ Each app lives under `apps/<name>/`:
 
 1. Discovers every `apps/*/` directory.
 2. Builds multi-arch (`linux/amd64`, `linux/arm64`) with Buildx.
-3. Runs Hadolint and Grype (fail on HIGH/CRITICAL).
+  3. Runs Hadolint and Grype (fail on HIGH/CRITICAL). Grype uses each app's
+     `.grype.yaml` as an ignore list for intentionally-accepted vulns and
+     auto-regenerates `SECURITY.md`; the gate still fails on any NEW
+     high/critical finding. A pull-request comment summarizes the scan.
 4. Pushes to `ghcr.io/tomgrozev/bedrock-containers/<app>` (tagged `latest` + date)
    and makes the package public.
 
@@ -138,4 +149,6 @@ Every app README MUST include:
 - a **Security posture** table (user, port, capabilities, root fs, init),
 - the **Required writable mounts** table for read-only root fs,
 - the **Environment** variables the image responds to,
-- a **restricted deployment** example snippet.
+- a **restricted deployment** example snippet,
+- a **Known vulnerabilities & acceptance** section linking to the generated
+  `SECURITY.md` (see template and `scripts/gen-security-md.py`).

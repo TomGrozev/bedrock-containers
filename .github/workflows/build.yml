@@ -13,8 +13,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   packages: write
+  pull-requests: write
 
 jobs:
   discover:
@@ -28,10 +29,131 @@ jobs:
           apps=$(ls -d apps/*/ 2>/dev/null | xargs -n1 basename | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "apps=$apps" >> "$GITHUB_OUTPUT"
 
-  build:
-    name: ${{ matrix.app }}
+  scan:
+    name: scan ${{ matrix.app }}
     needs: discover
-    if: ${{ needs.discover.outputs.apps != '[]' }}
+    if: ${{ needs.discover.outputs.apps != '[]' && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')) }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.discover.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Compute image name
+        id: image
+        run: |
+          echo "base=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.app }}" >> "$GITHUB_OUTPUT"
+
+      - name: Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: apps/${{ matrix.app }}/Dockerfile
+
+      # Build single-arch locally (not pushed) so the image exists for scanning.
+      # Publishing happens ONLY in the `publish` job, which depends on this job
+      # passing — including the Grype gate. Nothing is published from here.
+      - name: Build (local, for scan)
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/${{ matrix.app }}
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: ${{ steps.image.outputs.base }}:ci-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Locate Grype config
+        id: grypecfg
+        run: |
+          f="apps/${{ matrix.app }}/.grype.yaml"
+          if [ -f "$f" ]; then echo "path=$f" >> "$GITHUB_OUTPUT"; else echo "path=" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Grype scan
+        id: grype
+        uses: anchore/scan-action@v7
+        with:
+          grype-version: "v0.114.0"
+          config: ${{ steps.grypecfg.outputs.path }}
+          image: ${{ steps.image.outputs.base }}:ci-${{ github.sha }}
+          severity-cutoff: high
+          # Push to the default branch fails the build on high+ vulns; PRs report only.
+          fail-build: ${{ github.event_name != 'pull_request' }}
+          output-format: table
+          output-file: grype-${{ matrix.app }}.txt
+
+      - name: Show Grype results in job log
+        if: always()
+        run: cat grype-${{ matrix.app }}.txt
+
+      - name: Sync SECURITY.md from .grype.yaml
+        run: |
+          app="apps/${{ matrix.app }}"
+          if [ -f "$app/.grype.yaml" ] && [ -f "$app/SECURITY.md.tmpl" ]; then
+            python3 scripts/gen-security-md.py "$app"
+            if [ -n "$(git status --porcelain "$app/SECURITY.md")" ]; then
+              if [ "${{ github.event_name }}" = "pull_request" ]; then
+                echo "::error::SECURITY.md is out of date with .grype.yaml. Run: python3 scripts/gen-security-md.py $app"
+                git --no-pager diff "$app/SECURITY.md"
+                exit 1
+              else
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add "$app/SECURITY.md"
+                git commit -m "docs(${{ matrix.app }}): sync SECURITY.md from .grype.yaml [skip ci]"
+                git push
+              fi
+            else
+              echo "SECURITY.md up to date"
+            fi
+          else
+            echo "No .grype.yaml/SECURITY.md.tmpl for $app; skipping sync"
+          fi
+
+      - name: Upload Grype report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grype-${{ matrix.app }}
+          path: grype-${{ matrix.app }}.txt
+          if-no-files-found: warn
+
+      - name: Comment Grype results on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('grype-${{ matrix.app }}.txt', 'utf8');
+            const body = [
+              '### 🔍 Grype vulnerability scan — `${{ matrix.app }}`',
+              '',
+              '_Note: this scans the image built from this PR (linux/amd64), not the deployed `:latest`._',
+              '',
+              '<details><summary>Results (severity ≥ high)</summary>',
+              '',
+              '```',
+              report,
+              '```',
+              '',
+              '</details>'
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+  publish:
+    name: publish ${{ matrix.app }}
+    needs: [discover, scan]
+    if: ${{ github.event_name != 'pull_request' && needs.discover.outputs.apps != '[]' && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')) }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -44,7 +166,6 @@ jobs:
       - uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -54,8 +175,27 @@ jobs:
       - name: Compute image name
         id: image
         run: |
-          # Container image references must be lowercase; normalize the repo path.
           echo "base=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.app }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract app version
+        id: appver
+        run: |
+          app="apps/${{ matrix.app }}"
+          ver=$(awk -F= '/^[[:space:]]*ARG[[:space:]]+VERSION=/{gsub(/[ "]/,"",$2); print $2; exit}' "$app/Dockerfile")
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "App version: ${ver:-<none>}"
+
+      - name: Extract package description from app README
+        id: desc
+        run: |
+          readme="apps/${{ matrix.app }}/README.md"
+          if [ -f "$readme" ]; then
+            desc=$(python3 -c "import re,pathlib;t=pathlib.Path('$readme').read_text();t=re.sub(r'^#\s+.*\n','',t);paras=[re.sub(r'\s+',' ',p).strip() for p in t.split('\n\n') if p.strip()];print(paras[0][:200] if paras else '')")
+          else
+            desc=""
+          fi
+          echo "description=$desc" >> "$GITHUB_OUTPUT"
+          echo "Description: $desc"
 
       - name: Docker metadata
         id: meta
@@ -64,35 +204,22 @@ jobs:
           images: ${{ steps.image.outputs.base }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=schedule,pattern={{date 'YYYYMMDD'}},enable=true
+            type=raw,value=${{ steps.appver.outputs.version }},enable=${{ steps.appver.outputs.version != '' }}
+          labels: |
+            org.opencontainers.image.description=${{ steps.desc.outputs.description }}
 
-      - name: Hadolint
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: apps/${{ matrix.app }}/Dockerfile
-
-      - name: Build and push
+      - name: Build and push (multi-arch)
         uses: docker/build-push-action@v6
         with:
           context: apps/${{ matrix.app }}
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Grype scan
-        if: github.event_name != 'pull_request'
-        uses: anchore/scan-action@v7
-        with:
-          grype-version: "v0.114.0"
-          image: ${{ steps.image.outputs.base }}:latest
-          severity-cutoff: high
-          fail-build: true
-
       - name: Make package public
-        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

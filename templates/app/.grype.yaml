@@ -1,0 +1,20 @@
+# Grype ignore list for <app>.
+#
+# This is the SINGLE SOURCE OF TRUTH for vulnerabilities that are intentionally
+# "accepted" in this image — typically ones inherited from the upstream
+# application layer (copied verbatim from the upstream image) that cannot be
+# patched here without forking/rebuilding the app. CI regenerates
+# apps/<app>/SECURITY.md from this file on every run; never edit SECURITY.md by hand.
+#
+# Add an entry per accepted vulnerability, by its exact ID (GHSA or CVE), with a
+# short reason:
+#
+#   - vulnerability: GHSA-xxxx-xxxx-xxxx
+#     reason: "Accepted upstream <UPSTREAM_IMAGE> vuln; see apps/<app>/SECURITY.md"
+#   - vulnerability: CVE-2026-xxxxx
+#     reason: "Accepted upstream <UPSTREAM_IMAGE> vuln; see apps/<app>/SECURITY.md"
+#
+# Keep each entry scoped to a SPECIFIC vulnerability ID so the build still fails
+# on any NEW high/critical finding (e.g. in the Wolfi base or a new dependency).
+ignore:
+  # (start empty; add accepted findings here as described above)

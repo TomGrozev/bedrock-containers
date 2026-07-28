@@ -73,6 +73,21 @@ persistence:
   # TODO: add persistent / path-specific mounts from the table above.
 ```
 
+## Known vulnerabilities & acceptance
+
+Images are scanned with Grype (HIGH/CRITICAL) in CI. If a finding is inherited
+from the upstream application and not patchable without forking/rebuilding the
+app, it can be **accepted**:
+
+1. Add the vulnerability ID to `apps/<app>/.grype.yaml` (the single source of
+   truth) with a short `reason`.
+2. Regenerate the documentation: `python3 scripts/gen-security-md.py apps/<app>`
+   (CI also does this automatically and fails the PR if it is out of date).
+3. The image carries an `org.opencontainers.image.documentation` label pointing
+   at the generated `SECURITY.md`.
+
+Do **not** edit `SECURITY.md` by hand — it is generated from `.grype.yaml`.
+
 ## Local build
 
 ```sh
