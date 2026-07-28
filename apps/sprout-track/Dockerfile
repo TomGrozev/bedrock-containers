@@ -48,6 +48,16 @@ RUN apk add --no-cache \
 # --chown so every file is owned by the runtime user — no root required at runtime.
 COPY --chown=65532:65532 --from=upstream /app /app
 
+# Bake the correct (glibc) Prisma engine binaries. The upstream Alpine image ships
+# MUSL engines, but Wolfi is glibc — at runtime Prisma searches for
+# `*-debian-openssl-3.0.x` and fails with "Could not find schema-engine binary".
+# Running `prisma generate` once here (on the Wolfi host) downloads the
+# debian-openssl engines into node_modules. The runtime re-generates the
+# provider-specific client into the writable /tmp mount using these engines, so
+# no network is needed at runtime. The build-time client is discarded by the
+# /app/node_modules/.prisma symlink block below; only the engines persist.
+RUN npm run prisma:generate
+
 # Bring upstream's startup script and STRIP two blocks that are incompatible with a
 # read-only root fs / non-root user:
 #   1. The timezone block (`echo "$TZ" > /etc/TZ` + a /etc/localtime symlink) — /etc
@@ -76,10 +86,18 @@ if grep -qE 'crond|notification:cron:setup' /usr/local/bin/docker-startup.sh; th
 fi
 STRIP
 
-# The Prisma schema under /app/prisma is read at runtime (migrations/schema) and
-# is baked into this image, so it does NOT need a mount or an init container.
-# Make it world-readable so the image runs under any non-root uid, not just 65532.
-RUN chmod -R a+rX /app/prisma
+# The Prisma schemas under /app/prisma (schema.prisma AND log-schema.prisma) are
+# REWRITTEN at runtime by `prisma-provider.js` to match DATABASE_PROVIDER. On a
+# read-only root fs that write dies with EROFS — the script aborts at the first
+# writeFileSync, so NEITHER schema ever gets rewritten (the log-schema "url must
+# start with file:" error is a downstream symptom of this same crash). Fix: bake
+# the schema dir under /opt (immutable) and symlink /app/prisma to a per-pod
+# writable path; the entrypoint copies the baked schemas in before startup.
+# Relocating the WHOLE directory (not per-file symlinks) means every schema file
+# is writable regardless of which ones prisma-provider.js touches.
+RUN mv /app/prisma /opt/prisma-schema \
+ && chmod -R a+rX /opt/prisma-schema \
+ && ln -s /tmp/bedrock/prisma-schema /app/prisma
 
 # Consolidate every ephemeral writable path into a SINGLE /tmp emptyDir mount.
 # Bake symlinks so /app/env, /app/logs, /app/node_modules/.prisma and the cron

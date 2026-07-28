@@ -49,21 +49,26 @@ Designed for the Kubernetes `restricted` Pod Security Standard:
 ## Mounts (read-only root fs)
 
 All **ephemeral** writes are consolidated into a **single `/tmp` emptyDir mount**
-via baked symlinks (`/app/env`, `/app/logs`, `/app/node_modules/.prisma`, and the
-cron spool all resolve into `/tmp/bedrock/*`, created by the entrypoint at
-startup). This is deliberate: one bounded writable region is a smaller attack
+via baked symlinks (`/app/env`, `/app/logs`, `/app/node_modules/.prisma`,
+`/app/prisma`, and the cron spool all resolve into `/tmp/bedrock/*`, created by the
+entrypoint at startup). This is deliberate: one bounded writable region is a smaller attack
 surface than several scattered emptyDirs. The trade-off is that per-path
 `sizeLimit`s are replaced by a single limit on `/tmp`.
 
 | Path | Type | Purpose |
 |---|---|---|
-| `/tmp` | emptyDir (single writable region) | all ephemeral writes: env, logs, Prisma client, temp, cron spool |
+| `/tmp` | emptyDir (single writable region) | all ephemeral writes: env, logs, Prisma client, Prisma schema, temp, cron spool |
 | `/app/Files` | PVC | uploaded files (persistent) |
 | `/db` | PVC / emptyDir | SQLite databases — **only when `DATABASE_PROVIDER=sqlite`** |
 
-The Prisma schema (`/app/prisma`) is **baked into the image and read-only** — it
-does NOT need a mount, and the `copy-prisma-schemas` init container is NOT needed
-with this image.
+The Prisma schema (`/app/prisma`) is **baked into the image under `/opt/prisma-schema`**
+and **symlinked into the writable `/tmp` region** (`/tmp/bedrock/prisma-schema`,
+created and populated by the entrypoint at startup). It therefore does NOT need a
+mount or a `copy-prisma-schemas` init container. The schema must be writable at
+runtime because the upstream `docker-startup.sh` rewrites it (via `prisma-provider.js`)
+to match `DATABASE_PROVIDER` (sqlite ↔ postgresql) on every start; the
+copy-into-`/tmp` pattern provides that writability without giving up the read-only
+root filesystem.
 
 ## Environment
 
@@ -126,10 +131,27 @@ persistence:
     advancedMounts: {app: {app: [{path: /app/Files}]}}
 ```
 
-No init container is required — the Prisma schema is baked into the image.
+No init container is required — the Prisma schema is baked into the image (and
+symlinked to a writable path at startup).
 
 ## Local build
 
 ```sh
 docker buildx bake -f apps/sprout-track/docker-bake.hcl image-local
 ```
+
+## Build notes
+
+- **Prisma engines are baked at build time.** The upstream `node:22-alpine` image
+  ships **musl** Prisma engine binaries, but Wolfi is **glibc** — at runtime Prisma
+  would fail with `Could not find schema-engine binary`. The final stage therefore
+  runs `npm run prisma:generate` once during the build to download the
+  `debian-openssl-3.0.x` engines into `node_modules/@prisma/engines`. Do **not**
+  remove that `RUN`; the runtime re-generates the provider-specific client into the
+  writable `/tmp` mount using these already-present engines (no network needed at
+  runtime).
+- **The Prisma schema is relocated, not mounted.** `/app/prisma` is moved to
+  `/opt/prisma-schema` (immutable) and symlinked to `/tmp/bedrock/prisma-schema`;
+  the entrypoint copies it into the writable mount so `prisma-provider.js` can
+  rewrite it at startup. This keeps the root filesystem read-only while still
+  allowing the upstream runtime provider switch (sqlite ↔ postgresql).

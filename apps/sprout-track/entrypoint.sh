@@ -4,7 +4,12 @@ set -eu
 # Create the single writable region that every symlinked ephemeral path resolves
 # into (the mounted /tmp emptyDir). Everything under /tmp/bedrock is writable at
 # runtime; the baked symlinks in the image point here.
-mkdir -p /tmp/bedrock/env /tmp/bedrock/logs /tmp/bedrock/prisma-client /tmp/bedrock/cron/crontabs
+mkdir -p /tmp/bedrock/env /tmp/bedrock/logs /tmp/bedrock/prisma-client /tmp/bedrock/cron/crontabs /tmp/bedrock/prisma-schema
+
+# Copy the baked Prisma schemas (read-only under /opt) into the writable mount so
+# docker-startup.sh's `prisma-provider.js` rewrite step can mutate schema.prisma
+# and log-schema.prisma on the read-only root fs.
+cp -a /opt/prisma-schema/. /tmp/bedrock/prisma-schema/
 
 # Rootless, read-only-safe notification ping — the COMPLETE replacement for the
 # upstream image's setuid `crontab` + Alpine `dcron` setup (which cannot run as a
