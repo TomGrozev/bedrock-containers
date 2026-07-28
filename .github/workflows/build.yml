@@ -62,7 +62,8 @@ jobs:
       - name: Build (local, for scan, via bake)
         uses: docker/bake-action@v5
         with:
-          files: apps/${{ matrix.app }}/docker-bake.hcl
+          source: apps/${{ matrix.app }}
+          files: docker-bake.hcl
           targets: image-local
           load: true
           set: |
@@ -222,8 +223,9 @@ jobs:
       - name: Build and push (multi-arch, via bake)
         uses: docker/bake-action@v5
         with:
+          source: apps/${{ matrix.app }}
           files: |
-            apps/${{ matrix.app }}/docker-bake.hcl
+            docker-bake.hcl
             ${{ steps.meta.outputs.bake-file }}
           targets: image-all
           push: true
