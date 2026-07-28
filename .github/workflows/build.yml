@@ -24,9 +24,28 @@ jobs:
       apps: ${{ steps.set.outputs.apps }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          list-files: shell
+          filters: |
+            infra:
+              - '.github/workflows/build.yml'
+            apps:
+              - 'apps/**'
       - id: set
         run: |
-          apps=$(ls -d apps/*/ 2>/dev/null | xargs -n1 basename | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          # Rebuild every app when the build process itself changed, or on manual dispatch.
+          if [ "${{ steps.filter.outputs.infra }}" = "true" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            apps=$(ls -d apps/*/ 2>/dev/null | xargs -n1 basename | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          else
+            # Build only the apps whose files actually changed.
+            apps=$(echo '${{ steps.filter.outputs.apps_files }}' \
+              | tr ' ' '\n' | grep '^apps/[^/]*/' | cut -d/ -f2 \
+              | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          fi
           echo "apps=$apps" >> "$GITHUB_OUTPUT"
 
   scan:
