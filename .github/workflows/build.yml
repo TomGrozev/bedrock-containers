@@ -223,6 +223,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          owner="${GITHUB_REPOSITORY%/*}"
           repo_name="${GITHUB_REPOSITORY##*/}"
-          pkg_url="${repo_name}%2F${{ matrix.app }}"
-          gh api -X PUT "/repos/${GITHUB_REPOSITORY}/packages/container/${pkg_url}/visibility" -f visibility=public
+          pkg_name="${repo_name}%2F${{ matrix.app }}"
+          # GHCR packages are namespaced under the repo owner (user or org).
+          # The package-visibility API endpoint differs by owner type.
+          if gh api "/orgs/${owner}" >/dev/null 2>&1; then
+            endpoint="/orgs/${owner}/packages/container/${pkg_name}/visibility"
+          else
+            endpoint="/user/packages/container/${pkg_name}/visibility"
+          fi
+          gh api -X PUT "$endpoint" -f visibility=public
