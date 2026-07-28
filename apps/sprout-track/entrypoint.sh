@@ -37,14 +37,36 @@ ln -s /app/app /tmp/bedrock/app
 #
 # Active only when ENABLE_NOTIFICATIONS=true. The app's /api/notifications/cron
 # endpoint is itself gated by a DB flag, so firing when notifications are disabled at
-# the app level is a harmless no-op.
+# the app level is a harmless no-op (returns 503).
+#
+# IMPORTANT: the secret the app validates against is NOT the container process env.
+# docker-startup.sh's `env:ensure` step auto-generates NOTIFICATION_CRON_SECRET and
+# writes it to /app/env/.env (the writable env file, symlinked at /app/.env); the Node
+# app loads that file (via shell export + Next.js .env loading) and compares the
+# incoming Bearer token to it. An externally-injected process-env NOTIFICATION_CRON_SECRET
+# is NOT what the app checks. So -- exactly like the upstream run-notification-cron.sh --
+# we source the secret from /app/env/.env on every iteration, which guarantees the token
+# matches the app's expected value (fixes the 401 "Invalid secret"). The first iteration
+# may run before env:ensure has written the file; we skip the ping until the secret exists.
 if [ "${ENABLE_NOTIFICATIONS:-false}" = "true" ]; then
   (
     while true; do
-      curl -fsS -X POST http://localhost:3000/api/notifications/cron \
-        -H "Authorization: Bearer ${NOTIFICATION_CRON_SECRET:-}" \
-        -H "Content-Type: application/json" --max-time 30 \
-        || echo "entrypoint: notification cron ping failed" >&2
+      NOTIFICATION_CRON_SECRET=""
+      if [ -f /app/env/.env ]; then
+        NOTIFICATION_CRON_SECRET=$(. /app/env/.env 2>/dev/null || true; printf '%s' "${NOTIFICATION_CRON_SECRET:-}")
+      fi
+      if [ -n "${NOTIFICATION_CRON_SECRET}" ]; then
+        code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/notifications/cron \
+          -H "Authorization: Bearer ${NOTIFICATION_CRON_SECRET}" \
+          -H "Content-Type: application/json" --max-time 30) || code="000"
+        case "$code" in
+          2??) ;;                                  # success
+          503) ;;                                  # notifications disabled at DB level -- benign no-op
+          *) echo "entrypoint: notification cron ping failed (HTTP ${code})" >&2 ;;
+        esac
+      else
+        echo "entrypoint: NOTIFICATION_CRON_SECRET not yet available in /app/env/.env, skipping ping" >&2
+      fi
       sleep 60
     done
   ) &
