@@ -47,6 +47,7 @@ RUN apk add --no-cache \
 # Bring the application (includes node_modules w/ Prisma engines + better-sqlite3).
 # --chown so every file is owned by the runtime user — no root required at runtime.
 COPY --chown=65532:65532 --from=upstream /app /app
+WORKDIR /app
 
 # Bake the correct (glibc) Prisma engine binaries. The upstream Alpine image ships
 # MUSL engines, but Wolfi is glibc — at runtime Prisma searches for
@@ -56,7 +57,7 @@ COPY --chown=65532:65532 --from=upstream /app /app
 # provider-specific client into the writable /tmp mount using these engines, so
 # no network is needed at runtime. The build-time client is discarded by the
 # /app/node_modules/.prisma symlink block below; only the engines persist.
-RUN cd /app && npm run prisma:generate  # runs from /app where package.json lives (WORKDIR /app is set later in the file)
+RUN npm run prisma:generate  # bakes glibc Prisma engines; runs from /app via WORKDIR above
 
 # Bring upstream's startup script and STRIP two blocks that are incompatible with a
 # read-only root fs / non-root user:
@@ -113,8 +114,6 @@ RUN rm -rf /app/env /app/logs /app/node_modules/.prisma /var/spool/cron \
 # Persistent / stateful writable dirs still need their own mounts.
 RUN mkdir -p /app/Files /db \
     && chown -R 65532:65532 /app/Files /db
-
-WORKDIR /app
 
 # Rootless notification cron + launch.
 COPY --chown=65532:65532 entrypoint.sh /app/entrypoint.sh
