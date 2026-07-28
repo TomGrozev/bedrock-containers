@@ -3,14 +3,13 @@
 # Designed to run under a read-only root filesystem with all capabilities dropped.
 # Upstream source: https://github.com/Oak-and-Sprout/sprout-track (node:22-alpine based).
 
-ARG VERSION=1.6
-# renovate: datasource=docker depName=sprouttrack/sprout-track
+# VERSION is provided as a build arg by docker-bake.hcl (its `variable "VERSION"`),
+# so the bake file is the single source of truth. No default here on purpose — build
+# via `docker buildx bake` (or CI), or pass --build-arg VERSION=<x> to a bare build.
+ARG VERSION
 FROM sprouttrack/sprout-track:${VERSION} AS upstream
 
 FROM cgr.dev/chainguard/wolfi-base:latest AS final
-
-ARG VERSION=1.6
-# renovate: datasource=docker depName=sprouttrack/sprout-track
 
 # Runtime defaults mirror the upstream image so a standalone run works (SQLite).
 ENV NODE_ENV=production \

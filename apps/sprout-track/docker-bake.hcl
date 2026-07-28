@@ -4,8 +4,9 @@ variable "APP" {
   default = "sprout-track"
 }
 
+# renovate: datasource=docker depName=sprouttrack/sprout-track
 variable "VERSION" {
-  default = "1.6"
+  default = "1.6.3"
 }
 
 variable "SOURCE" {
@@ -28,8 +29,8 @@ target "image" {
 
 target "image-local" {
   inherits = ["image"]
-  output = ["type=docker"]
-  tags = ["${APP}:${VERSION}"]
+  output   = ["type=docker"]
+  tags     = ["${APP}:${VERSION}"]
 }
 
 target "image-all" {

@@ -3,14 +3,12 @@
 # Designed to run under a read-only root filesystem with all capabilities dropped.
 # Upstream source: <UPSTREAM_SOURCE_URL>
 
-ARG VERSION=<UPSTREAM_VERSION>
-# renovate: datasource=docker depName=<UPSTREAM_IMAGE_REPO>
+# VERSION is provided as a build arg by docker-bake.hcl (its `variable "VERSION"`),
+# so the bake file is the single source of truth. No default here on purpose.
+ARG VERSION
 FROM <UPSTREAM_IMAGE>:${VERSION} AS upstream
 
 FROM cgr.dev/chainguard/wolfi-base:latest AS final
-
-ARG VERSION=<UPSTREAM_VERSION>
-# renovate: datasource=docker depName=<UPSTREAM_IMAGE_REPO>
 
 # Runtime defaults (mirror upstream where possible; keep the default port > 1024).
 ENV NODE_ENV=production \

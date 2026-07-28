@@ -12,9 +12,9 @@
   customManagers: [
     {
       customType: "regex",
-      managerFilePatterns: ["/apps/[^/]+/Dockerfile$/"],
+      managerFilePatterns: ["/apps/[^/]+/docker-bake\\.hcl$/"],
       matchStrings: [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?ARG VERSION=(?<currentValue>[^\\s]+)"
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?variable\\s+\"VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
       versioningTemplate: "docker"
     }

@@ -4,6 +4,7 @@ variable "APP" {
   default = "<app>"
 }
 
+# renovate: datasource=docker depName=<UPSTREAM_IMAGE_REPO>
 variable "VERSION" {
   default = "<UPSTREAM_VERSION>"
 }
