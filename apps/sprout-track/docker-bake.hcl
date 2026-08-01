@@ -6,7 +6,7 @@ variable "APP" {
 
 # renovate: datasource=docker depName=sprouttrack/sprout-track
 variable "VERSION" {
-  default = "1.6.3"
+  default = "1.6.5"
 }
 
 variable "SOURCE" {
