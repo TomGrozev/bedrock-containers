@@ -69,7 +69,7 @@ jobs:
           echo "base=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.app }}" >> "$GITHUB_OUTPUT"
 
       - name: Hadolint
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.4.0
         with:
           dockerfile: apps/${{ matrix.app }}/Dockerfile
 
