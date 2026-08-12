@@ -7,6 +7,12 @@
       description: "Group Wolfi base image updates",
       matchPackageNames: ["cgr.dev/chainguard/wolfi-base"],
       groupName: "wolfi-base"
+    },
+    {
+      description: "Auto-merge upstream container image updates (per-app versions in docker-bake.hcl + Wolfi base image)",
+      matchDatasources: ["docker"],
+      automerge: true,
+      platformAutomerge: true
     }
   ],
   customManagers: [
