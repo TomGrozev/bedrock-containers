@@ -148,6 +148,20 @@ app, it can be **accepted**:
 
 Do **not** edit `SECURITY.md` by hand — it is generated from `.grype.yaml`.
 
+**Risk context for the currently accepted findings.** As of this writing,
+`.grype.yaml` accepts 17 vulnerability IDs — 11 in FFmpeg (`ffmpeg-8.1`), 5 in
+libssh, and 1 in OpenSSL (`libcrypto3` / `libssl3` / `openssl-dev`). These are
+not cases where a fix exists and we chose not to apply it: every one is unfixed
+upstream in the affected project itself (FFmpeg's fixes have not shipped in any
+branch including 7.x, so downgrading does not help). They will clear
+automatically via Renovate once Wolfi ships patched packages — operators should
+merge those PRs promptly. muxarr's core function is running `ffmpeg` /
+`mkvmerge` against user-supplied video files, which is exactly the
+untrusted-input path this class of vulnerability would be exploited through — a
+materially different risk profile than a stale npm devDependency CVE. For
+risk-averse deployments: `/media` should only ever point at trusted/scanned
+input.
+
 ## Local build
 
 ```sh

@@ -10,15 +10,30 @@ ARG VERSION
 FROM ghcr.io/kirovair/muxarr:${VERSION} AS upstream
 
 # mkvtoolnix (mkvmerge, mkvpropedit) has NO Wolfi/Chainguard apk package (verified
-# against wolfi-dev/os). Instead of building it from source, lift the already-built
-# binaries out of upstream's own Debian 12 image, together with their COMPLETE glibc
-# shared-library closure (via ldd) -- including libc/ld-linux themselves. The closure
-# is kept in a private directory and the binaries are invoked via that private dynamic
-# linker directly (`ld-linux... --library-path <private-dir> <binary>`), NOT via a
-# global LD_LIBRARY_PATH or by relying on the binary's baked-in PT_INTERP path (which
-# points at a Debian path Wolfi doesn't have). This fully isolates Debian's glibc from
-# Wolfi's own -- it cannot interfere with the .NET runtime or anything else in the image.
-FROM upstream AS mkvtoolnix-extract
+# against wolfi-dev/os). Instead of building it from source, install mkvtoolnix into
+# a dedicated Debian Trixie stage and lift the built binaries out, together with
+# their COMPLETE glibc shared-library closure (via ldd) -- including libc/ld-linux
+# themselves.
+#
+# Why a dedicated Debian Trixie stage (not the muxarr `upstream` image):
+# The upstream image pins whatever Debian release the upstream maintainers happen to
+# use (currently bookworm). Bookworm ships `mkvtoolnix 77.0` against `qtbase 6.4.2`,
+# which has unfixed High/Critical CVEs (CVE-2023-51714, CVE-2024-36048, ...). Trixie
+# ships `mkvtoolnix 92.0` against `qtbase 6.8.2`, which has all of those patches.
+# Extracting from our own Debian Trixie stage -- rather than the muxarr upstream
+# image -- decouples mkvtoolnix's CVE posture from upstream's Debian pin.
+#
+# The closure is kept in a private directory and the binaries are invoked via that
+# private dynamic linker directly (`ld-linux... --library-path <private-dir>
+# <binary>`), NOT via a global LD_LIBRARY_PATH or by relying on the binary's baked-in
+# PT_INTERP path (which points at a Debian path Wolfi doesn't have). This fully
+# isolates Debian's glibc from Wolfi's own -- it cannot interfere with the .NET
+# runtime or anything else in the image.
+FROM debian:trixie-slim AS mkvtoolnix-source
+RUN apt-get update && apt-get install -y --no-install-recommends mkvtoolnix \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM mkvtoolnix-source AS mkvtoolnix-extract
 RUN set -eu; \
     mkdir -p /extract/libexec /extract/lib; \
     for bin in mkvmerge mkvpropedit; do \

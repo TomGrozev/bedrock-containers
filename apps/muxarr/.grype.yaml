@@ -17,4 +17,45 @@
 # Keep each entry scoped to a SPECIFIC vulnerability ID so the build still fails
 # on any NEW high/critical finding (e.g. in the Wolfi base or a new dependency).
 ignore:
-  # (start empty; add accepted findings here as described above)
+  # ffmpeg-8.1 (Wolfi apk) — unfixed upstream in FFmpeg itself; tracked for automatic
+  # resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md.
+  - vulnerability: CVE-2026-64830
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-64833
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-64834
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-64835
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-65703
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-65704
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-65705
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-65706
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-66036
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-66039
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-66040
+    reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  # libssh (Wolfi apk) — unfixed upstream libssh CVEs; tracked for automatic resolution
+  # via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md.
+  - vulnerability: CVE-2026-15370
+    reason: "Unfixed upstream libssh CVE; tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-59847
+    reason: "Unfixed upstream libssh CVE; tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-59849
+    reason: "Unfixed upstream libssh CVE; tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-59850
+    reason: "Unfixed upstream libssh CVE; tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-59851
+    reason: "Unfixed upstream libssh CVE; tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  # OpenSSL CVE-2026-54876 (libcrypto3 + libssl3 + openssl-dev) — unfixed upstream; rated
+  # Low by OpenSSL itself (OCSP-flag-gated memory leak, not triggered by default .NET/
+  # ffmpeg TLS usage); needs OpenSSL 3.6.4. openssl-dev is unavoidably pulled in by
+  # ffmpeg-8.1/libsrt (pc:libcrypto + pc:openssl deps). See apps/muxarr/SECURITY.md.
+  - vulnerability: CVE-2026-54876
+    reason: "Unfixed upstream OpenSSL CVE (rated Low by OpenSSL — OCSP-flag-gated memory leak, not triggered by default .NET/ffmpeg TLS usage); needs OpenSSL 3.6.4. See apps/muxarr/SECURITY.md."
