@@ -6,7 +6,7 @@ variable "APP" {
 
 # renovate: datasource=docker depName=ghcr.io/kirovair/muxarr
 variable "VERSION" {
-  default = "0.9.6"
+  default = "0.9.9"
 }
 
 variable "SOURCE" {
