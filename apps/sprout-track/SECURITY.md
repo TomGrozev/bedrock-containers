@@ -31,7 +31,7 @@ hardening re-layer.
 > single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` — 67 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 74 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
@@ -69,6 +69,8 @@ _Generated from `.grype.yaml` — 67 accepted vulnerability ID(s). Edit `.grype.
 | `GHSA-25h7-pfq9-p65f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-267c-6grr-h53f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-26hh-7cqf-hhc6` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-28wg-ghj8-5hjv` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-2v37-7h3g-55p8` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-35jp-ww65-95wh` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-36qx-fr4f-26g5` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-38f7-945m-qr2g` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
@@ -76,16 +78,20 @@ _Generated from `.grype.yaml` — 67 accepted vulnerability ID(s). Edit `.grype.
 | `GHSA-3jxr-9vmj-r5cp` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-492v-c6pp-mqqv` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-52cp-r559-cp3m` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-5p4m-2wfm-xmqj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-6chq-wfr3-2hj9` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-6g55-p6wh-862q` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-6gpp-xcg3-4w24` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-737v-mqg7-c878` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-73wf-gq98-2v4g` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-777c-7fjr-54vf` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-89xv-2m56-2m9x` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-8h8q-6873-q5fj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-c2c7-rcm5-vvqj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-c4j6-fc7j-m34r` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-c83g-rgw3-j3cx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-f88m-g3jw-g9cj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-ggr8-5vv4-36mx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-hfxv-24rg-xrqf` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-hmw2-7cc7-3qxx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-j5f8-grm9-p9fc` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
@@ -102,6 +108,7 @@ _Generated from `.grype.yaml` — 67 accepted vulnerability ID(s). Edit `.grype.
 | `GHSA-q8qp-cvcw-x6jj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-r28c-9q8g-f849` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-rf6f-7fwh-wjgh` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-rgw5-rvv9-x895` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 
 
 ## How this is enforced
