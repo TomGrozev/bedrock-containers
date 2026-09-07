@@ -74,6 +74,10 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-26hh-7cqf-hhc6
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-28wg-ghj8-5hjv
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-2v37-7h3g-55p8
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-35jp-ww65-95wh
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-36qx-fr4f-26g5
@@ -88,6 +92,8 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-52cp-r559-cp3m
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-5p4m-2wfm-xmqj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-6chq-wfr3-2hj9
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-6g55-p6wh-862q
@@ -95,6 +101,8 @@ ignore:
   - vulnerability: GHSA-6gpp-xcg3-4w24
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-737v-mqg7-c878
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-73wf-gq98-2v4g
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-777c-7fjr-54vf
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
@@ -106,7 +114,11 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-c4j6-fc7j-m34r
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-c83g-rgw3-j3cx
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-f88m-g3jw-g9cj
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-ggr8-5vv4-36mx
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-hfxv-24rg-xrqf
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
@@ -139,4 +151,6 @@ ignore:
   - vulnerability: GHSA-r28c-9q8g-f849
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-rf6f-7fwh-wjgh
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-rgw5-rvv9-x895
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"

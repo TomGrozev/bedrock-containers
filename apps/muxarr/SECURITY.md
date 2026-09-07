@@ -27,7 +27,7 @@ Wolfi base itself is generally clean at `High`/`Critical`.
 > (the single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` — 17 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 19 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
@@ -48,6 +48,8 @@ _Generated from `.grype.yaml` — 17 accepted vulnerability ID(s). Edit `.grype.
 | `CVE-2026-66036` | Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md. |
 | `CVE-2026-66039` | Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md. |
 | `CVE-2026-66040` | Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md. |
+| `CVE-2026-70628` | Unfixed upstream in FFmpeg 8.x; fixed only in FFmpeg 9.0 (not yet released). Tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md. |
+| `CVE-2026-70632` | Unfixed upstream in FFmpeg 8.x; fixed only in FFmpeg 9.0 (not yet released). Tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md. |
 
 
 ## How this is enforced

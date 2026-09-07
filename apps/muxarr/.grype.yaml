@@ -41,6 +41,12 @@ ignore:
     reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
   - vulnerability: CVE-2026-66040
     reason: "Unfixed upstream in FFmpeg itself as of 2026-08 (affects all branches incl. 7.x); tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  # ffmpeg-8.1 (Wolfi apk) — unfixed in FFmpeg 8.x; fixed only in FFmpeg 9.0 which
+  # does not exist yet. Same posture as the 2026-08 batch above. See apps/muxarr/SECURITY.md.
+  - vulnerability: CVE-2026-70632
+    reason: "Unfixed upstream in FFmpeg 8.x; fixed only in FFmpeg 9.0 (not yet released). Tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
+  - vulnerability: CVE-2026-70628
+    reason: "Unfixed upstream in FFmpeg 8.x; fixed only in FFmpeg 9.0 (not yet released). Tracked for automatic resolution via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md."
   # libssh (Wolfi apk) — unfixed upstream libssh CVEs; tracked for automatic resolution
   # via Renovate once a patched Wolfi package ships. See apps/muxarr/SECURITY.md.
   - vulnerability: CVE-2026-15370
