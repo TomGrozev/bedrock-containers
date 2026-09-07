@@ -20,8 +20,12 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-33671
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-33818
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-35209
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-39822
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-42033
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-42035
@@ -58,6 +62,18 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-45623
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-46600
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-56853
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-56859
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-56862
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-56864
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-56865
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-59869
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-64641
@@ -83,6 +99,8 @@ ignore:
   - vulnerability: GHSA-36qx-fr4f-26g5
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-38f7-945m-qr2g
+    reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-3f6p-5ww8-9rcr
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-3g43-6gmg-66jw
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
@@ -154,3 +172,19 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-rgw5-rvv9-x895
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-4970
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-5026
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-5942
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-5970
+    reason: "Accepted upstream Go module vuln (golang.org/x/text vendored in app binary); not patchable here without rebuilding the app. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-5972
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-6088
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-6089
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
+  - vulnerability: GO-2026-6090
+    reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
