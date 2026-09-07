@@ -31,7 +31,7 @@ hardening re-layer.
 > single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` on 2026-07-28 — 67 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 67 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |

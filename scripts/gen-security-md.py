@@ -11,7 +11,6 @@ no change when in sync.
 import os
 import re
 import sys
-from datetime import date
 
 
 def parse_ignore(path):
@@ -38,7 +37,7 @@ def render(items):
     items = sorted(items, key=lambda x: x["vuln"])
     lines = []
     lines.append(
-        f"_Generated from `.grype.yaml` on {date.today().isoformat()} — "
+        "_Generated from `.grype.yaml` — "
         f"{len(items)} accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._"
     )
     lines.append("")

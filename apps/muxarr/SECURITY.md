@@ -27,7 +27,7 @@ Wolfi base itself is generally clean at `High`/`Critical`.
 > (the single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` on 2026-08-13 — 17 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 17 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
