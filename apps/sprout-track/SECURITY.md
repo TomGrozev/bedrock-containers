@@ -40,7 +40,7 @@ and is outside the scope of a hardening re-layer.
 > single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` — 92 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 94 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
@@ -89,6 +89,7 @@ _Generated from `.grype.yaml` — 92 accepted vulnerability ID(s). Edit `.grype.
 | `GHSA-26hh-7cqf-hhc6` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-28wg-ghj8-5hjv` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-2v37-7h3g-55p8` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-2x7j-588g-ccc2` | Accepted upstream npm vuln (nodemailer 9.0.5 in the published sprout-track image); fixed in nodemailer 9.1.0, pending upstream bump. See apps/sprout-track/SECURITY.md |
 | `GHSA-35jp-ww65-95wh` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-36qx-fr4f-26g5` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-38f7-945m-qr2g` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
@@ -127,6 +128,7 @@ _Generated from `.grype.yaml` — 92 accepted vulnerability ID(s). Edit `.grype.
 | `GHSA-q8qp-cvcw-x6jj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-r28c-9q8g-f849` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-rf6f-7fwh-wjgh` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `GHSA-rgj7-g3m4-5g8c` | Accepted upstream npm vuln (sharp 0.35.3 in the published sprout-track image); fixed in sharp 0.35.4, pending upstream bump. See apps/sprout-track/SECURITY.md |
 | `GHSA-rgw5-rvv9-x895` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GO-2026-4970` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
 | `GO-2026-5026` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |

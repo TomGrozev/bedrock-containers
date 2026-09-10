@@ -98,6 +98,8 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-2v37-7h3g-55p8
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-2x7j-588g-ccc2
+    reason: "Accepted upstream npm vuln (nodemailer 9.0.5 in the published sprout-track image); fixed in nodemailer 9.1.0, pending upstream bump. See apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-35jp-ww65-95wh
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-36qx-fr4f-26g5
@@ -176,6 +178,8 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-rgw5-rvv9-x895
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: GHSA-rgj7-g3m4-5g8c
+    reason: "Accepted upstream npm vuln (sharp 0.35.3 in the published sprout-track image); fixed in sharp 0.35.4, pending upstream bump. See apps/sprout-track/SECURITY.md"
   - vulnerability: GO-2026-4970
     reason: "Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md"
   - vulnerability: GO-2026-5026
