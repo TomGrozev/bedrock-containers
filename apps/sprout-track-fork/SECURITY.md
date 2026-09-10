@@ -31,101 +31,103 @@ hardening re-layer.
 > single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` — 91 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 93 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
-| `CVE-2026-12143` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-13149` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-14257` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-32141` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-32887` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-33228` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-33671` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-33818` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-35209` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-39822` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-42033` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-42035` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-42043` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-42264` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44486` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44487` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44488` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44494` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44495` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44496` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44573` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44574` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44575` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44578` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44579` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-44705` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-45109` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-45623` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-46600` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-56853` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-56859` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-56862` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-56864` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-56865` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `CVE-2026-59869` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-64641` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-64642` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-64645` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `CVE-2026-64649` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-25h7-pfq9-p65f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-267c-6grr-h53f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-26hh-7cqf-hhc6` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-28wg-ghj8-5hjv` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-2v37-7h3g-55p8` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-35jp-ww65-95wh` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-36qx-fr4f-26g5` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-38f7-945m-qr2g` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-3f6p-5ww8-9rcr` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-3g43-6gmg-66jw` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-3jxr-9vmj-r5cp` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-492v-c6pp-mqqv` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-52cp-r559-cp3m` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-5p4m-2wfm-xmqj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-6chq-wfr3-2hj9` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-6g55-p6wh-862q` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-6gpp-xcg3-4w24` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-737v-mqg7-c878` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-73wf-gq98-2v4g` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-777c-7fjr-54vf` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-89xv-2m56-2m9x` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-8h8q-6873-q5fj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-c2c7-rcm5-vvqj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-c4j6-fc7j-m34r` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-c83g-rgw3-j3cx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-f88m-g3jw-g9cj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-ggr8-5vv4-36mx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-hfxv-24rg-xrqf` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-hmw2-7cc7-3qxx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-j5f8-grm9-p9fc` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-m99w-x7hq-7vfj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-mg66-mrh9-m8jx` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-mh99-v99m-4gvg` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-p6gq-j5cr-w38f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-p92q-9vqr-4j8v` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-p9j2-gv94-2wf4` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-pf86-5x62-jrwf` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-ph9p-34f9-6g65` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-pmwg-cvhr-8vh7` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-q4gf-8mx6-v5v3` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-q8qp-cvcw-x6jj` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-r28c-9q8g-f849` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-rf6f-7fwh-wjgh` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GHSA-rgw5-rvv9-x895` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
-| `GO-2026-4970` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `GO-2026-5026` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `GO-2026-5942` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `GO-2026-5970` | Accepted upstream Go module vuln (golang.org/x/text vendored in app binary); not patchable here without rebuilding the app. See apps/sprout-track/SECURITY.md |
-| `GO-2026-5972` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `GO-2026-6088` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `GO-2026-6089` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
-| `GO-2026-6090` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track/SECURITY.md |
+| `CVE-2026-12143` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-13149` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-14257` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-32141` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-32887` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-33228` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-33671` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-33818` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-35209` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-39822` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-42033` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-42035` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-42043` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-42264` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44486` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44487` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44488` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44494` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44495` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44496` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44573` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44574` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44575` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44578` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44579` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-44705` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-45109` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-45623` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-46600` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-56853` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-56859` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-56862` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-56864` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-56865` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-59869` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-64641` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-64642` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-64645` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `CVE-2026-64649` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-25h7-pfq9-p65f` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-267c-6grr-h53f` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-26hh-7cqf-hhc6` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-28wg-ghj8-5hjv` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-2v37-7h3g-55p8` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-2x7j-588g-ccc2` | Accepted upstream npm vuln (nodemailer 9.0.5 in the fork's source tree); fixed in nodemailer 9.1.0, pending upstream bump. See apps/sprout-track-fork/SECURITY.md |
+| `GHSA-35jp-ww65-95wh` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-36qx-fr4f-26g5` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-38f7-945m-qr2g` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-3f6p-5ww8-9rcr` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-3g43-6gmg-66jw` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-3jxr-9vmj-r5cp` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-492v-c6pp-mqqv` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-52cp-r559-cp3m` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-5p4m-2wfm-xmqj` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-6chq-wfr3-2hj9` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-6g55-p6wh-862q` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-6gpp-xcg3-4w24` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-737v-mqg7-c878` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-73wf-gq98-2v4g` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-777c-7fjr-54vf` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-89xv-2m56-2m9x` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-8h8q-6873-q5fj` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-c2c7-rcm5-vvqj` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-c4j6-fc7j-m34r` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-c83g-rgw3-j3cx` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-f88m-g3jw-g9cj` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-ggr8-5vv4-36mx` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-hfxv-24rg-xrqf` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-hmw2-7cc7-3qxx` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-j5f8-grm9-p9fc` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-m99w-x7hq-7vfj` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-mg66-mrh9-m8jx` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-mh99-v99m-4gvg` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-p6gq-j5cr-w38f` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-p92q-9vqr-4j8v` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-p9j2-gv94-2wf4` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-pf86-5x62-jrwf` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-ph9p-34f9-6g65` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-pmwg-cvhr-8vh7` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-q4gf-8mx6-v5v3` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-q8qp-cvcw-x6jj` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-r28c-9q8g-f849` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-rf6f-7fwh-wjgh` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GHSA-rgj7-g3m4-5g8c` | Accepted upstream npm vuln (sharp 0.35.3 in the fork's source tree); fixed in sharp 0.35.4, pending upstream bump. See apps/sprout-track-fork/SECURITY.md |
+| `GHSA-rgw5-rvv9-x895` | Accepted upstream npm vuln; see apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-4970` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-5026` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-5942` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-5970` | Accepted upstream Go module vuln (golang.org/x/text vendored in app binary); not patchable here without rebuilding the app. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-5972` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-6088` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-6089` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
+| `GO-2026-6090` | Accepted upstream Go stdlib vuln (app binary built with go1.26.4); fixed in Go *1.26.6, pending upstream rebuild. See apps/sprout-track-fork/SECURITY.md |
 
 
 ## How this is enforced
