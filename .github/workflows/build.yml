@@ -216,6 +216,23 @@ jobs:
           echo "version=$ver" >> "$GITHUB_OUTPUT"
           echo "App version: ${ver:-<none>}"
 
+      - name: Extract fork commit (if pinned)
+        id: appref
+        run: |
+          app="apps/${{ matrix.app }}"
+          ref=$(awk '
+            /^[[:space:]]*variable[[:space:]]+"REF"/ { inref=1 }
+            inref && /default/ {
+              line=$0
+              sub(/.*default[[:space:]]*=[[:space:]]*/, "", line)
+              gsub(/[ "]/, "", line)
+              if (line ~ /^[0-9a-f]{40}$/) { print line; exit }
+            }
+          ' "$app/docker-bake.hcl")
+          echo "commit=${ref:0:7}" >> "$GITHUB_OUTPUT"
+          echo "commit_full=$ref" >> "$GITHUB_OUTPUT"
+          echo "Fork commit: ${ref:0:7} (full: ${ref:-none})"
+
       - name: Extract package description from app README
         id: desc
         run: |
@@ -236,6 +253,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ steps.appver.outputs.version }},enable=${{ steps.appver.outputs.version != '' }}
+            type=raw,value=${{ steps.appref.outputs.commit }},enable=${{ steps.appref.outputs.commit != '' }}
           labels: |
             org.opencontainers.image.description=${{ steps.desc.outputs.description }}
 

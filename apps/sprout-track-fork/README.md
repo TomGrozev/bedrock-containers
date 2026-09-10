@@ -150,6 +150,10 @@ symlinked to a writable path at startup).
 docker buildx bake -f apps/sprout-track-fork/docker-bake.hcl image-local
 ```
 
+The local image is tagged with the short commit hash of the pinned fork
+`main` (e.g. `sprout-track-fork:cd75c46`) plus a `:main` alias, matching
+the CI upload tags (`:latest` and `:<fork main short sha>`).
+
 ## Build notes
 
 - **Prisma engines are baked at build time.** The upstream `node:22-alpine` image

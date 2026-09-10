@@ -26,7 +26,7 @@ Reference it in a Kubernetes manifest:
 ```yaml
 image:
   repository: ghcr.io/tomgrozev/bedrock-containers/sprout-track
-  tag: latest          # pin by digest in production
+  tag: latest          # pin by digest (or commit tag) in production
 ```
 
 Always pin by digest in production for reproducibility.

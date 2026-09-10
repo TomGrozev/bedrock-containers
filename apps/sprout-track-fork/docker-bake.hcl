@@ -21,6 +21,14 @@ variable "REF" {
   default = "cd75c463687332df5b34ee06afc0f8cf6210ac68"
 }
 
+# Short commit tag for the local image. buildx bake's expression parser cannot
+# evaluate function calls inside string templates ("${APP}:${substr(REF, 0, 7)}"
+# fails to parse), so the full tag string is built inside this zero-arg function.
+function "fork_short_tag" {
+  params = []
+  result = "${APP}:${substr(REF, 0, 7)}"
+}
+
 group "default" {
   targets = ["image-local"]
 }
@@ -50,7 +58,7 @@ target "image" {
 target "image-local" {
   inherits = ["image"]
   output   = ["type=docker"]
-  tags     = ["${APP}:main"]
+  tags     = [fork_short_tag(), "${APP}:main"]
 }
 
 target "image-all" {
