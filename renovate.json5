@@ -13,6 +13,13 @@
       matchDatasources: ["docker"],
       automerge: true,
       platformAutomerge: true
+    },
+    {
+      description: "Auto-merge the sprout-track fork main-branch digest bumps",
+      matchDatasources: ["git-refs"],
+      matchDepNames: ["TomGrozev/sprout-track"],
+      automerge: true,
+      platformAutomerge: true
     }
   ],
   customManagers: [
@@ -23,6 +30,18 @@
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?variable\\s+\"VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
       versioningTemplate: "docker"
+    },
+    {
+      description: "Track the sprout-track fork's main HEAD as a git-refs digest pin (sprout-track-fork image)",
+      customType: "regex",
+      managerFilePatterns: ["/apps/sprout-track-fork/docker-bake\\.hcl$/"],
+      matchStrings: [
+        "variable\\s+\"REF\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentDigest>[0-9a-f]{40})\""
+      ],
+      currentValueTemplate: "main",
+      depNameTemplate: "TomGrozev/sprout-track",
+      packageNameTemplate: "https://github.com/TomGrozev/sprout-track",
+      datasourceTemplate: "git-refs"
     }
   ]
 }

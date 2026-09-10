@@ -9,6 +9,7 @@ Every image is **Wolfi-based**, **rootless** (`65532:65532`), **read-only-root-f
 | Image | Upstream | Notes |
 |---|---|---|
 | [`ghcr.io/tomgrozev/bedrock-containers/sprout-track`](apps/sprout-track/README.md) | [`sprouttrack/sprout-track`](https://github.com/Oak-and-Sprout/sprout-track) (Node 22 / Next.js / Prisma) | Replaces upstream setuid/`dcron` notification cron with a rootless `busybox crond`. |
+| [`ghcr.io/tomgrozev/bedrock-containers/sprout-track-fork`](apps/sprout-track-fork/README.md) | [`TomGrozev/sprout-track`](https://github.com/TomGrozev/sprout-track) (Node 22 / Next.js / Prisma) | Built from the fork's `main` **source** at a Renovate-pinned commit (git-refs digest), then hardened (rootless, read-only rootfs). |
 
 Each app has its own README with the security posture, required writable mounts, environment variables, and a deployment example.
 
