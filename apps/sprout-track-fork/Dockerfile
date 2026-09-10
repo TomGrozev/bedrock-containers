@@ -5,6 +5,10 @@
 # fork's `main` branch, injected as the `forkimage` build context by docker-bake.hcl
 # (target `fork-src`). See docker-bake.hcl for the source/ref single source of truth.
 # Fork source: https://github.com/TomGrozev/sprout-track (node:22-alpine based).
+# `forkimage` is a buildx named context injected by docker-bake.hcl
+# (contexts.forkimage = target:fork-src), not a registry image — there is no
+# tag to pin, so DL3006 does not apply and is ignored for this line only.
+# hadolint ignore=DL3006
 FROM forkimage AS upstream
 
 FROM cgr.dev/chainguard/wolfi-base:latest AS final
