@@ -6,24 +6,33 @@ application onto Chainguard's Wolfi base. It is scanned on every push with
 [Grype](https://github.com/anchore/grype) (severity cutoff `high`).
 
 ## TL;DR
-All `High`/`Critical` findings reported by Grype live in the **upstream
+Almost all `High`/`Critical` findings reported by Grype live in the **upstream
 application's npm dependencies** (copied verbatim from the upstream image's
-`/app`), **not** in the Wolfi base image. The Wolfi base is clean at
-`High`/`Critical`. These findings are **accepted** and documented here; they
-are deliberately NOT patched in this repo because fixing them requires
-modifying the upstream application (rebuilding `node_modules` / bumping the
-upstream release), which risks breaking the app and is outside the scope of a
-hardening re-layer.
+`/app`), not in the Wolfi base image. The single exception is `CVE-2026-82209`
+(curl in the Wolfi base), accepted as a scanner false positive: the fix shipped
+**in** curl 8.22.0 — the exact version in the image — but the Grype DB record
+lacks fixed-in data in some DB vintages, so version matching flags the patched
+package. The remaining findings are deliberately NOT patched in this repo
+because fixing them requires modifying the upstream application (rebuilding
+`node_modules` / bumping the upstream release), which risks breaking the app
+and is outside the scope of a hardening re-layer.
 
 ## Why we accept them
-- They are inherited from the upstream application layer. This repo only
-  re-layers and hardens the *runtime* (rootless, read-only rootfs, dropped
-  capabilities); it does not rebuild the app.
-- Every finding has an upstream fix available, but applying it here would mean
-  forking/rebuilding the app — out of scope and potentially destabilizing.
+- The npm findings are inherited from the upstream application layer. This
+  repo only re-layers and hardens the *runtime* (rootless, read-only rootfs,
+  dropped capabilities); it does not rebuild the app.
+- Every npm finding has an upstream fix available, but applying it here would
+  mean forking/rebuilding the app — out of scope and potentially destabilizing.
 - The application runs as a non-root user (UID 65532) under a read-only root
   filesystem with all capabilities dropped, which substantially reduces the
   exploitability of these server-side npm issues.
+- The curl finding is accepted on the merits, not inherited: curl is affected
+  only at versions `<= 8.21.0` and the fix landed **in** 8.22.0, which is the
+  installed version (`8.22.0-r2`). The image's curl is used solely by the
+  rootless notification loop to ping the app itself over localhost, so the
+  PSL cookie-scoping flaw has no attacker-reachable path. Once the Grype DB
+  carries fixed-in data for this CVE, the entry is dropped and the scan passes
+  unignored.
 
 ## Accepted findings (High)
 > This section is **auto-generated** from [`.grype.yaml`](./.grype.yaml) by
@@ -31,7 +40,7 @@ hardening re-layer.
 > single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` — 91 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 92 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
@@ -74,6 +83,7 @@ _Generated from `.grype.yaml` — 91 accepted vulnerability ID(s). Edit `.grype.
 | `CVE-2026-64642` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `CVE-2026-64645` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `CVE-2026-64649` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
+| `CVE-2026-82209` | False positive on Wolfi curl 8.22.0-r2: affected range is <= 8.21.0 and the fix shipped IN 8.22.0 (curl rates this Low); some Grype DB vintages lack fixed-in data for this ID and flag the patched package. curl in this image only pings the local app. See apps/sprout-track/SECURITY.md |
 | `GHSA-25h7-pfq9-p65f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-267c-6grr-h53f` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |
 | `GHSA-26hh-7cqf-hhc6` | Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md |

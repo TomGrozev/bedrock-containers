@@ -1,10 +1,12 @@
 # Grype ignore list for sprout-track.
-# These specific High-severity findings are inherited from the upstream
+# Almost all accepted High-severity findings are inherited from the upstream
 # sprouttrack/sprout-track application's npm dependencies (copied verbatim into
-# the image). The Wolfi base image is clean at High/Critical. They are accepted
-# and documented in apps/sprout-track/SECURITY.md. Each entry is scoped to a
-# specific vulnerability ID, so the build STILL fails on any NEW high/critical
-# finding (e.g. in the base image or a new dependency).
+# the image). The single exception (CVE-2026-82209) is a Wolfi base curl finding
+# accepted as a scanner false positive: the fix shipped IN curl 8.22.0, the exact
+# version in the image. All entries are accepted and documented in
+# apps/sprout-track/SECURITY.md, and each is scoped to a specific vulnerability
+# ID, so the build STILL fails on any NEW high/critical finding (e.g. in the
+# base image or a new dependency).
 ignore:
   - vulnerability: CVE-2026-12143
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
@@ -84,6 +86,8 @@ ignore:
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: CVE-2026-64649
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
+  - vulnerability: CVE-2026-82209
+    reason: "False positive on Wolfi curl 8.22.0-r2: affected range is <= 8.21.0 and the fix shipped IN 8.22.0 (curl rates this Low); some Grype DB vintages lack fixed-in data for this ID and flag the patched package. curl in this image only pings the local app. See apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-25h7-pfq9-p65f
     reason: "Accepted upstream npm vuln; see apps/sprout-track/SECURITY.md"
   - vulnerability: GHSA-267c-6grr-h53f
