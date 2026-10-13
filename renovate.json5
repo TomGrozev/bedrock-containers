@@ -25,11 +25,25 @@
   customManagers: [
     {
       customType: "regex",
-      managerFilePatterns: ["/apps/[^/]+/docker-bake\\.hcl$/"],
+      // r3 is excluded here: its VERSION tracks GitHub *releases* tagged `vX.Y.Z`
+      // and needs `extractVersion` to strip the leading `v` (the dedicated manager
+      // below). Every other app's VERSION tracks a container image tag (docker
+      // datasource, no `v` stripping) — see the negative lookahead.
+      managerFilePatterns: ["/apps/(?!r3/)[^/]+/docker-bake\\.hcl$/"],
       matchStrings: [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?variable\\s+\"VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
       versioningTemplate: "docker"
+    },
+    {
+      description: "Track the r3 GitHub release (datasource=github-releases) and bump VERSION without the leading `v`",
+      customType: "regex",
+      managerFilePatterns: ["/apps/r3/docker-bake\\.hcl$/"],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?variable\\s+\"VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      versioningTemplate: "semver",
+      extractVersionTemplate: "^v?(?<version>.+)$"
     },
     {
       description: "Track the sprout-track fork's main HEAD as a git-refs digest pin (sprout-track-fork image)",
