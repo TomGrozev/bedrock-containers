@@ -25,14 +25,15 @@
   customManagers: [
     {
       customType: "regex",
-      // r3 is excluded here: its VERSION tracks GitHub *releases* tagged `vX.Y.Z`
-      // and needs `extractVersion` to strip the leading `v` (the dedicated manager
-      // below). Every other app's VERSION tracks a container image tag (docker
-      // datasource, no `v` stripping) — see the negative lookahead.
-      managerFilePatterns: ["/apps/(?!r3/)[^/]+/docker-bake\\.hcl$/"],
+      // Only apps whose VERSION tracks a container image tag (docker datasource).
+      // r3's VERSION tracks GitHub *releases* tagged `vX.Y.Z` and has its own
+      // manager below. The literal `datasource=docker` match keeps this manager
+      // from extracting r3 as a second, docker-versioned dependency.
+      managerFilePatterns: ["/apps/[^/]+/docker-bake\\.hcl$/"],
       matchStrings: [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)[\\s\\S]*?variable\\s+\"VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+        "# renovate: datasource=docker depName=(?<depName>\\S+)[\\s\\S]*?variable\\s+\"VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
+      datasourceTemplate: "docker",
       versioningTemplate: "docker"
     },
     {
