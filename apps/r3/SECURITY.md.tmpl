@@ -10,7 +10,8 @@ All `High`/`Critical` findings reported by Grype should be reviewed. When a
 finding is inherited from the upstream application layer (copied verbatim from
 the upstream image) and cannot be patched in this repo without forking/rebuilding
 the app, it may be intentionally **accepted** and listed in `.grype.yaml`. The
-Wolfi base itself is generally clean at `High`/`Critical`.
+Wolfi base is normally clean at `High`/`Critical`; a base finding with no
+patched package build may be accepted temporarily (see below).
 
 ## Why a finding might be accepted
 - It is inherited from the upstream application layer; this repo only re-layers
@@ -18,6 +19,8 @@ Wolfi base itself is generally clean at `High`/`Critical`.
   not the app code.
 - A fix exists upstream but applying it here means forking/rebuilding the app —
   out of scope and potentially destabilizing.
+- No patched build of the affected package has been published yet; the finding
+  is accepted temporarily and re-checked when the base is refreshed.
 - The app runs as a non-root user (UID 65532) under a read-only root filesystem
   with all capabilities dropped, which reduces exploitability.
 

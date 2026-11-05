@@ -17,4 +17,8 @@
 # Keep each entry scoped to a SPECIFIC vulnerability ID so the build still fails
 # on any NEW high/critical finding (e.g. in the Wolfi base or a new dependency).
 ignore:
-  # (start empty; add accepted findings here as described above)
+  # glibc LANGUAGE path traversal. CVE fix not yet built by Wolfi/Chainguard:
+  # the package index still tops out below the installed 2.44-r13, and the
+  # Wolfi advisory has no fixed-version entry. Revisit when a patched glibc ships.
+  - vulnerability: CVE-2026-84243
+    reason: "No patched Wolfi glibc build yet (2.44-r13 installed, 2026-11-05). Exploitable only when an attacker controls LANGUAGE and LC_MESSAGES and can place a crafted .mo file readably; this image sets no LANGUAGE/LANG/LC_ALL and runs non-root with a read-only rootfs."

@@ -10,7 +10,8 @@ All `High`/`Critical` findings reported by Grype should be reviewed. When a
 finding is inherited from the upstream application layer (copied verbatim from
 the upstream image) and cannot be patched in this repo without forking/rebuilding
 the app, it may be intentionally **accepted** and listed in `.grype.yaml`. The
-Wolfi base itself is generally clean at `High`/`Critical`.
+Wolfi base is normally clean at `High`/`Critical`; a base finding with no
+patched package build may be accepted temporarily (see below).
 
 ## Why a finding might be accepted
 - It is inherited from the upstream application layer; this repo only re-layers
@@ -18,6 +19,8 @@ Wolfi base itself is generally clean at `High`/`Critical`.
   not the app code.
 - A fix exists upstream but applying it here means forking/rebuilding the app —
   out of scope and potentially destabilizing.
+- No patched build of the affected package has been published yet; the finding
+  is accepted temporarily and re-checked when the base is refreshed.
 - The app runs as a non-root user (UID 65532) under a read-only root filesystem
   with all capabilities dropped, which reduces exploitability.
 
@@ -27,10 +30,11 @@ Wolfi base itself is generally clean at `High`/`Critical`.
 > (the single source of truth); CI keeps this file in sync. Do not edit the list
 > below by hand.
 
-_Generated from `.grype.yaml` — 0 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
+_Generated from `.grype.yaml` — 1 accepted vulnerability ID(s). Edit `.grype.yaml`, not this file._
 
 | Vulnerability ID | Reason |
 | --- | --- |
+| `CVE-2026-84243` | No patched Wolfi glibc build yet (2.44-r13 installed, 2026-11-05). Exploitable only when an attacker controls LANGUAGE and LC_MESSAGES and can place a crafted .mo file readably; this image sets no LANGUAGE/LANG/LC_ALL and runs non-root with a read-only rootfs. |
 
 
 ## How this is enforced
