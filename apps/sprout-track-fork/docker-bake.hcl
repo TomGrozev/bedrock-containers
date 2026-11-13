@@ -18,7 +18,7 @@ variable "SOURCE" {
 # file live in ../../renovate.json5), which triggers a rebuild. The build clones
 # this exact commit, so images are reproducible.
 variable "REF" {
-  default = "15b2cfb69fad7ef3586c2645f78eea6767a148b7"
+  default = "dab84453f4385e42c064aebac6bd120de36fe57c"
 }
 
 # Short commit tag for the local image. buildx bake's expression parser cannot
