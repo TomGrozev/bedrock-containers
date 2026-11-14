@@ -6,7 +6,7 @@ variable "APP" {
 
 # renovate: datasource=github-releases depName=hyperlogue/r3
 variable "VERSION" {
-  default = "2.6.0"
+  default = "2.9.1"
 }
 
 variable "SOURCE" {
